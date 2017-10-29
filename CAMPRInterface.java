@@ -6,24 +6,22 @@ import java.awt.event.WindowEvent;
 
 public class CAMPRInterface {
 
-   private static class Closer extends WindowAdapter {
-      public void windowClosing(WindowEvent e ) {
-         System.exit(0);
-      }
-   }
    public static Boolean DEBUG = false;
    public static void main(String[] args) throws Exception{
-
-      Boolean quitting = false;
-
-      JFrame frame = new JFrame();
-      frame.setTitle("CAMPR");
-      frame.setPreferredSize(new Dimension(1450,900));
-      frame.setResizable(true);
-      frame.addWindowListener(new Closer());
-
-      frame.pack();
-      frame.setVisible(true);
+      try{
+         Boolean quitting = false;
+         Background b = new Background("mouse.jpg");
+         Button butt = new Button(1,1,100,100);
+         butt.addToBackground(b);
+         CFrame frame = new CFrame("CAMPR", 900, 550);
+         frame.add(b);
+         frame.reveal();
+         CFrame frame2 = new CFrame("CAMPR2", 900, 550);
+         frame2.reveal();
+      }catch(Exception ex){
+         System.out.println("*shrug*");
+         ex.printStackTrace();
+      }
 
    }
 }
