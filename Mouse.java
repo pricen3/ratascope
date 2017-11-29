@@ -23,3 +23,5 @@ public class Mouse{
       return notes;
    }
 }
+
+//might be good to do notes as a file so that notes can be added to//deleted etc. add some functionality to notes might be helpfull//cool
