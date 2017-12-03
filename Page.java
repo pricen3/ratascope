@@ -6,6 +6,7 @@ import java.awt.event.WindowEvent;
 import javax.imageio.ImageIO;
 import java.io.InputStream;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 public class Page {
 
@@ -19,27 +20,19 @@ public class Page {
    private String title;
    private int x, y;
    private JFrame frame;
+   private Background back;
+   private ArrayList<Button> buttons;
+   private Boolean revealed;
 
 
    /* CONSTRUCTORS */
    public Page(String t, int xDimension, int yDimension){
+      buttons = new ArrayList<Button>();
+      back = new Background();
       title = t;
       x = xDimension;
       y = yDimension;
-      frame = new JFrame();
-      frame.setTitle(title);
-      frame.setPreferredSize(new Dimension(x, y));
-      frame.setResizable(false);
-      if(mainPage==false){
-         mainPage=true;
-         frame.addWindowListener(new Closer());
-      }
-   }
-   public Page(String t, int xDimension, int yDimension, boolean mainP){
-      mainPage = mainP;
-      title = t;
-      x = xDimension;
-      y = yDimension;
+      revealed = false;
       frame = new JFrame();
       frame.setTitle(title);
       frame.setPreferredSize(new Dimension(x, y));
@@ -51,20 +44,50 @@ public class Page {
    }
 
    /* METHODS */
+   public JFrame getFrame(){
+      return frame;
+   }
+   public int getXDim(){
+      return x;
+   }
    public void reveal(){
+      revealed = true;
+      frame.add(back);
       frame.pack();
       frame.setVisible(true);
+      int numButtons = buttons.size();
+      for (int i=0; i < numButtons; i++){
+         buttons.get(i).addToBackground(back);
+      }
    }
 
    public void add(Button b){
-      frame.add(b);
+      buttons.add(b);
+      if (revealed){
+         b.addToBackground(back);
+      }
+      //TODO add reshaping function if to many buttons...
+   }
+   public void add(JLabel p){
+      back.add(p, new Integer(5));
+   }
+   public void add(JComboBox<String> p){
+      back.add(p, new Integer(5));
    }
 
    public void addBackground(String img){
       /* Adds background image */
       try{
-         Background back = new Background(img);
-         frame.add(back);
+         back = new Background(img);
+      }catch(Exception ex){
+         System.out.println("here...");
+         ex.printStackTrace();
+      }
+   }
+   public void addBackground(String img, int x, int y){
+      /* Adds background image at coordinates (x,y) */
+      try{
+         back = new Background(img, x, y);
       }catch(Exception ex){
          System.out.println("here...");
          ex.printStackTrace();

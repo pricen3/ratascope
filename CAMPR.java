@@ -9,15 +9,38 @@ public class CAMPR {
    public static Boolean DEBUG = false;
    public static void main(String[] args) throws Exception{
       try{
-         Page frame = new Page("CAMPR", 900, 550);
-         frame.addBackground("mouse.jpg");
-         frame.reveal();
-         Page frame2 = new Page("CAMPR2", 900, 550);
-         frame2.reveal();
+         generateMainPage();
       }catch(Exception ex){
          System.out.println("*shrug*");
          ex.printStackTrace();
       }
-
    }
+
+   /* Create all pages */
+   public static void generateMainPage() throws Exception{
+      Page mainPage = new Page("CAMPR", 900, 200);
+      mainPage.addBackground("campr_logo.png", 0, 0);
+      /* add buttons */
+      mainPage.add(new Button(28, 30, 40, 150, "Experiments", generateExpPage()));
+      mainPage.add(new Button(28, 80, 40, 150, "Cages", generateCagePage()));
+      mainPage.add(new Button(28, 130, 40, 150, "Help"));
+      mainPage.reveal();
+   }
+   public static Page generateExpPage() throws Exception{
+      expPage ePage = expPage.getExpPage();
+      ePage.addBackground("campr_logo.png", 0, 0);
+      return ePage;
+   }
+   public static Page generateCagePage() throws Exception{
+      cagePage cPage = cagePage.getCagePage();
+      cPage.addBackground("campr_logo.png", 0, 0);
+      return cPage;
+   }
+   /*public static Page generateCagePage() throws Exception{
+      Page cagePage = new Page("Cages", 550, 900);
+      cagePage.addBackground("campr_logo.png", 0, 0);
+      Button newCage = new Button(28, 32, 40, 200, "Configure New Cage", new Page("New Cage", 900, 550));
+      cagePage.add(newCage);
+      return cagePage;
+   }*/
 }

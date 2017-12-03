@@ -1,51 +1,73 @@
-import javax.swing.JPanel;
+import javax.swing.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.Color;
 import java.lang.Integer;
 
 
 class Button extends JPanel{
 
    private int x, y, h, w;
+   private JButton buttonImg;
 
-   public Button (int x1, int y1, int h1, int w1) {
+   public Button (int x1, int y1, int h1, int w1, String txt) {
       x=x1;
       y=y1;
       h=h1;
       w=w1;
       setBounds(x,y,w,h);
-      setOpaque(true);
-      /*addMouseListener(new MouseAdapter() {
+      buttonImg = new JButton(txt);
+      buttonImg.setBounds(x,y,w,h);
+      setOpaque(false);
+      buttonImg.addMouseListener(new MouseAdapter() {
          public void mouseClicked(MouseEvent e) {
             clicked();
-         }});*/
+         }});
+   }
+
+   /* Button that links to Page p */
+   public Button (int x1, int y1, int h1, int w1, String txt, Page p) {
+      x=x1;
+      y=y1;
+      h=h1;
+      w=w1;
+      setBounds(x,y,w,h);
+      buttonImg = new JButton(txt);
+      buttonImg.setBounds(x,y,w,h);
+      setOpaque(false);
+      buttonImg.addMouseListener(new MouseAdapter() {
+         public void mouseClicked(MouseEvent e) {
+            p.reveal();
+            clicked();
+         }});
+   }
+
+   /* custom action */
+   public Button (int x1, int y1, int h1, int w1, String txt, MouseAdapter func) {
+      x=x1;
+      y=y1;
+      h=h1;
+      w=w1;
+      setBounds(x,y,w,h);
+      buttonImg = new JButton(txt);
+      buttonImg.setBounds(x,y,w,h);
+      setOpaque(false);
+      buttonImg.addMouseListener(func);
    }
 
    public void addToBackground(Background b){
       try{
-         b.add(this, new Integer(5));
+         b.add(buttonImg, new Integer(5));
       }catch (Exception ex){
          ex.printStackTrace();
       }
    }
-
-   /*public void addToBoardCard(int x1, int y1){
-      try{
-         BoardView board = BoardView.build();
-         setBounds(x1+x,y1+y,w,h);
-         board.add(this, new Integer(5));
-      }catch (Exception ex){
-         ex.printStackTrace();
-      }
-   }*/
 
    public void remove(){
-     setBounds(-100,-100, w, h);
+     buttonImg.setBounds(-100,-100, w, h);
    }
 
-   /*private void clicked() {
-      GameManager gm = GameManager.getGM();
-      String cmd[]={"work", role.getName()};
-      gm.work(cmd);
-   }*/
+   private void clicked() {
+
+   }
 }
