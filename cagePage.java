@@ -59,7 +59,7 @@ public class cagePage extends Page {
    private Page newExpPageCreate(){
       Page p = new Page("New Cage", 750, 900);
       p.addBackground("campr_logo.png", 0, 0);
-      descHelper(p, "ID number: "+(cageNum+1));
+      descHelper(p, "Name: Cage "+(cageNum+1));
       newTimeDropDown(p);
       p.add(new Button(540, 60, 40, 175, "Submit", new MouseAdapter() {
          public void mouseClicked(MouseEvent e) {

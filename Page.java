@@ -78,6 +78,9 @@ public class Page {
    public void add(JComboBox<String> p){
       back.add(p, new Integer(5));
    }
+   public void add(JTextField p){
+      back.add(p, new Integer(5));
+   }
 
    public void addBackground(String img){
       /* Adds background image */
