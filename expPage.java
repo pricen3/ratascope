@@ -55,11 +55,12 @@ public class expPage extends Page {
    }
 
    private Page newExpPageCreate(){
-      Page p = new Page("New Experiment", 550, 900);
+      Page p = new Page("New Experiment", 650, 500);
       p.addBackground("campr_logo.png", 0, 0);
       newTimeDropDown("Select a start time:\t", p, 30);
       newTimeDropDown("Select an end time:\t", p, 60);
-      p.add(new Button(28, 200, 40, 150, "Submit", new MouseAdapter() {
+      newCageDropDown("Select Cage for Experiment:\t", p, 90);
+      p.add(new Button(28, 150, 40, 150, "Submit", new MouseAdapter() {
          public void mouseClicked(MouseEvent e) {
             if(newButtonY > 850){
                newButtonX += 160;
@@ -73,8 +74,28 @@ public class expPage extends Page {
             String expString = "Experiment "+expNum;
             add(new Button(newButtonX, newButtonY, 40, 150, expString));
             newButtonY+=50;
-         }}));
+            //p.close();
+         }
+      }));
+      p.add(new Button(188, 150, 40, 150, "Cancel", new MouseAdapter() {
+         public void mouseClicked(MouseEvent e) {
+            p.close();
+         }
+      }));
       return p;
+   }
+
+   /* adds drop down menu on Page p for setting a cage*/
+   private void newCageDropDown(String desc, Page p, int pos){
+      JLabel sd = new JLabel(desc);
+      sd.setBounds(28,pos,200,20);
+      sd.setVisible(true);
+      p.add(sd);
+      String[] sdChoices = {"Cage 1","Cage 2"};
+      JComboBox<String> cb = new JComboBox<String>(sdChoices);
+      cb.setBounds(300,pos, 100, 20);
+      cb.setVisible(true);
+      p.add(cb);
    }
 
    /* adds drop down menu on Page p for setting a time at position pos*/
@@ -86,14 +107,15 @@ public class expPage extends Page {
       String[] sdChoices = {"12:00", "12:30", "1:00", "1:30", "2:00", "2:30", "3:00", "3:30",
          "4:00", "4:30", "5:00", "5:30", "6:00", "6:30", "7:00", "7:30", "8:00", "8:30", "9:00", "9:30",
          "10:00", "10:30", "11:00", "11:30"};
-         String[] sdChoices2 = {"AM", "PM"};
-      JComboBox<String> cb = new JComboBox<String>(sdChoices);
-      JComboBox<String> cb2 = new JComboBox<String>(sdChoices2);
-      cb.setBounds(300,pos, 80, 20);
-      cb2.setBounds(400,pos, 80, 20);
+      timeMenuHelper(p, 300, pos, sdChoices);
+      String[] sdChoices2 = {"AM", "PM"};
+      timeMenuHelper(p, 400, pos, sdChoices2);
+      //TODO add date stuff
+   }
+   private void timeMenuHelper(Page p, int xpos, int ypos, String[] Choices){
+      JComboBox<String> cb = new JComboBox<String>(Choices);
+      cb.setBounds(xpos,ypos, 80, 20);
       cb.setVisible(true);
       p.add(cb);
-      cb2.setVisible(true);
-      p.add(cb2);
    }
 }

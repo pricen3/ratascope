@@ -19,7 +19,7 @@ public class CAMPR {
    /* Create all pages */
    public static void generateMainPage() throws Exception{
       Page mainPage = new Page("CAMPR", 900, 200);
-      mainPage.addBackground("campr_logo.png", 0, 0);
+      mainPage.addBackground("campr_logo.png");
       /* add buttons */
       mainPage.add(new Button(28, 30, 40, 150, "Experiments", generateExpPage()));
       mainPage.add(new Button(28, 80, 40, 150, "Cages", generateCagePage()));
@@ -28,12 +28,12 @@ public class CAMPR {
    }
    public static Page generateExpPage() throws Exception{
       expPage ePage = expPage.getExpPage();
-      ePage.addBackground("campr_logo.png", 0, 0);
+      ePage.addBackground("campr_logo.png");
       return ePage;
    }
    public static Page generateCagePage() throws Exception{
       cagePage cPage = cagePage.getCagePage();
-      cPage.addBackground("campr_logo.png", 0, 0);
+      cPage.addBackground("campr_logo.png");
       return cPage;
    }
    /*public static Page generateCagePage() throws Exception{

@@ -66,6 +66,9 @@ class Button extends JPanel{
    public void remove(){
      buttonImg.setBounds(-100,-100, w, h);
    }
+   public JButton getImg(){
+      return buttonImg;
+   }
 
    private void clicked() {
 
