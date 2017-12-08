@@ -13,9 +13,9 @@ import java.awt.event.MouseEvent;
 
 public class cagePage extends Page {
 
-   private static class Closer extends WindowAdapter {
+   private static class CloseReset extends WindowAdapter {
       public void windowClosing(WindowEvent e ) {
-         System.exit(0);
+         getCagePage().resetCurPos();
       }
    }
    /* FIELDS */
@@ -38,11 +38,11 @@ public class cagePage extends Page {
       curPos = 30;
       newButtonY = 80;
       newButtonX = 28;
-      add(new Button(28, 30, 40, 150, "New Cage", newExpPageCreate()));
-      /*add(new Button(28, 32, 40, 200, "Submit", new MouseAdapter() {
+      add(new Button(28, 30, 40, 150, "New Cage", new MouseAdapter() {
          public void mouseClicked(MouseEvent e) {
-            System.out.println(cageNum);
-         }}));*/
+            newExpPageCreate();
+         }
+      }));
       exists = true;
    }
 
@@ -56,8 +56,8 @@ public class cagePage extends Page {
       return thePage;
    }
 
-   private Page newExpPageCreate(){
-      Page p = new Page("New Cage", 750, 900);
+   private void newExpPageCreate(){
+      Page p = new Page("New Cage", 750, 900, new CloseReset());
       p.addBackground("campr_logo.png", 0, 0);
       descHelper(p, "Name: Cage "+(cageNum+1));
       newTimeDropDown(p);
@@ -76,6 +76,7 @@ public class cagePage extends Page {
             add(new Button(newButtonX, newButtonY, 40, 150, cagestring));
             newButtonY+=50;
             p.close();
+            resetCurPos();
          }
       }));
       p.add(new Button(540, 110, 40, 175, "Add Time Interval", new MouseAdapter() {
@@ -84,7 +85,13 @@ public class cagePage extends Page {
          }
       }));
       p.add(new Button(540, 160, 40, 175, "Get Notes"));
-      return p;
+      p.add(new Button(540, 210, 40, 175, "Cancel", new MouseAdapter() {
+         public void mouseClicked(MouseEvent e) {
+            p.close();
+            resetCurPos();
+         }
+      }));
+      p.reveal();
    }
 
    /* adds drop down menu on Page p for setting a time at position pos*/
@@ -112,6 +119,9 @@ public class cagePage extends Page {
       cb.setBounds(xpos, ypos, 80, 20);
       cb.setVisible(true);
       p.add(cb);
+   }
+   public void resetCurPos(){
+      curPos=30;
    }
 
 }

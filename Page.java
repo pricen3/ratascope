@@ -42,6 +42,20 @@ public class Page {
          frame.addWindowListener(new Closer());
       }
    }
+   public Page(String t, int xDimension, int yDimension, WindowAdapter close){
+      buttons = new ArrayList<JButton>();
+      back = new Background();
+      title = t;
+      x = xDimension;
+      y = yDimension;
+      revealed = false;
+      frame = new JFrame();
+      frame.setTitle(title);
+      frame.setPreferredSize(new Dimension(x, y));
+      frame.setResizable(false);
+      frame.addWindowListener(close);
+
+   }
 
    /* METHODS */
    public JFrame getFrame(){
