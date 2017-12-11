@@ -40,7 +40,7 @@ public class cagePage extends Page {
       newButtonX = 28;
       add(new Button(28, 30, 40, 150, "New Cage", new MouseAdapter() {
          public void mouseClicked(MouseEvent e) {
-            newExpPageCreate();
+            newCagePageCreate();
          }
       }));
       exists = true;
@@ -56,11 +56,12 @@ public class cagePage extends Page {
       return thePage;
    }
 
-   private void newExpPageCreate(){
+   private void newCagePageCreate(){
       Page p = new Page("New Cage", 750, 900, new CloseReset());
       p.addBackground("campr_logo.png", 0, 0);
-      descHelper(p, "Name: Cage "+(cageNum+1));
-      newTimeDropDown(p);
+      descHelper(p, "ID: Cage "+(cageNum+1));
+      newTextInput("Name of Cage: ", p);
+      newTextInput("IP Address of Cage: ", p);
       p.add(new Button(540, 60, 40, 175, "Submit", new MouseAdapter() {
          public void mouseClicked(MouseEvent e) {
             if(newButtonY > 850){
@@ -79,13 +80,8 @@ public class cagePage extends Page {
             resetCurPos();
          }
       }));
-      p.add(new Button(540, 110, 40, 175, "Add Time Interval", new MouseAdapter() {
-         public void mouseClicked(MouseEvent e) {
-            newTimeDropDown(p);
-         }
-      }));
-      p.add(new Button(540, 160, 40, 175, "Get Notes"));
-      p.add(new Button(540, 210, 40, 175, "Cancel", new MouseAdapter() {
+      p.add(new Button(540, 110, 40, 175, "Get Notes"));
+      p.add(new Button(540, 160, 40, 175, "Cancel", new MouseAdapter() {
          public void mouseClicked(MouseEvent e) {
             p.close();
             resetCurPos();
@@ -94,19 +90,19 @@ public class cagePage extends Page {
       p.reveal();
    }
 
-   /* adds drop down menu on Page p for setting a time at position pos*/
-   private void newTimeDropDown(Page p){
-      String[] sdChoices = {"12:00", "12:30", "1:00", "1:30", "2:00", "2:30", "3:00", "3:30",
-         "4:00", "4:30", "5:00", "5:30", "6:00", "6:30", "7:00", "7:30", "8:00", "8:30", "9:00", "9:30",
-         "10:00", "10:30", "11:00", "11:30"};
-      String[] sdChoices2 = {"AM", "PM"};
-      for(int i= 0; i <= 30; i += 30){
-         timeMenuHelper(p, 300, curPos+i, sdChoices);
-         timeMenuHelper(p, 400, curPos+i, sdChoices2);
-      }
-      descHelper(p, "Turn Lights On");
-      descHelper(p, "Turn Lights Off");
+   /* adds input text box to page */
+   private void newTextInput(String desc, Page p){
+      JLabel sd = new JLabel(desc);
+      sd.setBounds(28,curPos,200,20);
+      sd.setVisible(true);
+      p.add(sd);
+      JTextField tb = new JTextField();
+      tb.setBounds(300,curPos, 100, 20);
+      tb.setVisible(true);
+      p.add(tb);
+      curPos += 30;
    }
+
    private void descHelper(Page p, String desc){
       JLabel sd = new JLabel(desc);
       sd.setBounds(28,curPos,200,20);
@@ -114,12 +110,7 @@ public class cagePage extends Page {
       sd.setVisible(true);
       p.add(sd);
    }
-   private void timeMenuHelper(Page p, int xpos, int ypos, String[] Choices){
-      JComboBox<String> cb = new JComboBox<String>(Choices);
-      cb.setBounds(xpos, ypos, 80, 20);
-      cb.setVisible(true);
-      p.add(cb);
-   }
+
    public void resetCurPos(){
       curPos=30;
    }
