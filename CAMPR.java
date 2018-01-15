@@ -19,7 +19,7 @@ public class CAMPR {
    /* Create all pages */
    public static void generateMainPage() throws Exception{
       Page mainPage = new Page("CAMPR", 900, 200);
-      mainPage.addBackground("camplr_logo.png");
+      mainPage.addBackground("campr_home.png");
       /* add buttons */
       mainPage.add(new Button(28, 30, 40, 150, "Experiments", generateExpPage()));
       mainPage.add(new Button(28, 80, 40, 150, "Cages", generateCagePage()));

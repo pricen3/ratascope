@@ -8,16 +8,18 @@ import java.time.*;
 public class Experiment{
    private ArrayList<Cage> cages;
    private String researcher;
-   //private time duration;
    private String name;
-   //private time startTime;
 
-   public Experiment( ArrayList<Cage> cage, String research, String mName){
-      cages = cage;
+   //TODO: These need to be changed to some sort of time-class
+   private String startTime;
+   private String endTime;
+
+   public Experiment(String research, String mName, String start, String end){
+      cages = new ArrayList<Cage>();
       researcher = research;
-      //duration = dur;
       name = mName;
-      //startTime = start;
+      startTime = start;
+      endTime = end;
    }
 
    public void run(){
@@ -43,6 +45,18 @@ public class Experiment{
 
    public String getName(){
       return name;
+   }
+   public String getResearcher(){
+      return researcher;
+   }
+   public String getStart(){
+      return startTime;
+   }
+   public String getEnd(){
+      return endTime;
+   }
+   public ArrayList<Cage> getCages(){
+      return cages;
    }
 
    public void cancelExperiment(ArrayList<Cage> c){

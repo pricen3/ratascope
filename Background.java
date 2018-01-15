@@ -27,4 +27,8 @@ public class Background extends JLayeredPane {
 	public Background(){
       back = new JLabel();
    }
+
+   public void resetBack(){
+      moveToBack(back);
+   }
 }

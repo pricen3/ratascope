@@ -6,10 +6,11 @@ import java.lang.Integer;
 
 
 class Button extends JPanel{
-
+   /*FIELDS*/
    private int x, y, h, w;
    private JButton buttonImg;
 
+   /*CONSTRUCTORS*/
    public Button (int x1, int y1, int h1, int w1, String txt) {
       x=x1;
       y=y1;
@@ -55,6 +56,7 @@ class Button extends JPanel{
       buttonImg.addMouseListener(func);
    }
 
+   /*METHODS*/
    public void addToBackground(Background b){
       try{
          b.add(buttonImg, new Integer(5));
@@ -63,8 +65,15 @@ class Button extends JPanel{
       }
    }
 
+   public int getX(){
+      System.out.println("retreive");
+      return x;
+   }
+
    public void remove(){
-     buttonImg.setBounds(-100,-100, w, h);
+      x=-100;
+      y=-100;
+      buttonImg.setBounds(-100,-100, w, h);
    }
    public JButton getImg(){
       return buttonImg;

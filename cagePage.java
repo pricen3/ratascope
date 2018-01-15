@@ -9,15 +9,51 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-//TODO fix overlay background bug
+//TODO add functionality to save default cage names if no cage name entered
 
 public class cagePage extends Page {
 
    private static class CloseReset extends WindowAdapter {
-      public void windowClosing(WindowEvent e ) {
+      public void windowClosing(WindowEvent e) {
          getCagePage().resetCurPos();
       }
    }
+
+   private static class SubmitButtonClick extends MouseAdapter {
+      private Page p;
+      private JTextField name;
+      private JTextField ip;
+
+      public void setPage(Page page){
+         p = page;
+      }
+      public void watchName(JTextField userInput){
+         name = userInput;
+      }
+      public void watchIP(JTextField userInput){
+         ip = userInput;
+      }
+
+      public void mouseClicked(MouseEvent e) {
+         p.clearErrors();
+         cagePage cP = cagePage.getCagePage();
+         expPage eP = expPage.getExpPage();
+         String cName = name.getText();
+         String ipAdd = ip.getText();
+         if(cName.equals("")){
+            p.errorMessHelper("Name field required.");
+         }else if(ipAdd.equals("")){
+            p.errorMessHelper("IP Address field required.");
+         }else{
+            Cage c = new Cage(cName, ipAdd);
+            cP.addCageButton(c);
+            eP.addCage(c);
+            p.close();
+            cP.resetCurPos();
+         }
+      }
+   }
+
    /* FIELDS */
    private static boolean exists = false;
    private static cagePage thePage;
@@ -26,7 +62,6 @@ public class cagePage extends Page {
    private int cageNum;
    private int newButtonY;
    private int newButtonX;
-   private int curPos;
 
 
    /* CONSTRUCTORS */
@@ -35,7 +70,6 @@ public class cagePage extends Page {
       cageButtons = new ArrayList<Button>();
       cages = new ArrayList<Experiment>();
       cageNum = 0;
-      curPos = 30;
       newButtonY = 80;
       newButtonX = 28;
       add(new Button(28, 30, 40, 150, "New Cage", new MouseAdapter() {
@@ -52,67 +86,59 @@ public class cagePage extends Page {
          /* do nothing */
       }else{
          thePage = new cagePage();
+         thePage.addBackground("campr_cage_home.png");
       }
       return thePage;
    }
 
    private void newCagePageCreate(){
-      Page p = new Page("New Cage", 750, 900, new CloseReset());
-      p.addBackground("campr_logo.png", 0, 0);
-      descHelper(p, "ID: Cage "+(cageNum+1));
-      newTextInput("Name of Cage: ", p);
-      newTextInput("IP Address of Cage: ", p);
-      p.add(new Button(540, 60, 40, 175, "Submit", new MouseAdapter() {
-         public void mouseClicked(MouseEvent e) {
-            if(newButtonY > 850){
-               newButtonX += 160;
-               if (newButtonX >= getXDim()-160){
-                  getFrame().setPreferredSize(new Dimension(newButtonX + 160, 900));
-                  reveal();
-               }
-               newButtonY = 80;
-            }
-            cageNum++;
-            String cagestring = "Cage "+cageNum;
-            add(new Button(newButtonX, newButtonY, 40, 150, cagestring));
-            newButtonY+=50;
-            p.close();
-            resetCurPos();
-         }
-      }));
+      Page p = new Page("New Cage", 750, 500, new CloseReset());
+      p.addBackground("campr_new_cage.png", 0, 0);
+      p.descHelper("ID: Cage "+(cageNum+1));
+
+      /* Keep track of user inputs with submit button */
+      SubmitButtonClick submitB = new SubmitButtonClick();
+      submitB.setPage(p);
+
+      submitB.watchName(p.newTextInput("Name of Cage: ", 150));
+      submitB.watchIP(p.newTextInput("IP Address of Cage: ", 150));
+      p.add(new Button(540, 60, 40, 175, "Submit", submitB));
       p.add(new Button(540, 110, 40, 175, "Get Notes"));
       p.add(new Button(540, 160, 40, 175, "Cancel", new MouseAdapter() {
          public void mouseClicked(MouseEvent e) {
+            p.resetCurPos();
             p.close();
-            resetCurPos();
          }
       }));
       p.reveal();
    }
 
-   /* adds input text box to page */
-   private void newTextInput(String desc, Page p){
-      JLabel sd = new JLabel(desc);
-      sd.setBounds(28,curPos,200,20);
-      sd.setVisible(true);
-      p.add(sd);
-      JTextField tb = new JTextField();
-      tb.setBounds(300,curPos, 100, 20);
-      tb.setVisible(true);
-      p.add(tb);
-      curPos += 30;
-   }
+   /* Add a button that reveals stored cage information upon click */
+   public void addCageButton(Cage c){
+      if(newButtonY > 850){
+         newButtonX += 160;
+         if (newButtonX >= getXDim()-160){
+            getFrame().setPreferredSize(new Dimension(newButtonX + 160, 900));
+            reveal();
+         }
+         newButtonY = 80;
+      }
+      cageNum++;
+      String cagestring = c.getID();
+      if(cagestring == ""){
+         cagestring = "Cage "+cageNum;
+      }
 
-   private void descHelper(Page p, String desc){
-      JLabel sd = new JLabel(desc);
-      sd.setBounds(28,curPos,200,20);
-      curPos += 30;
-      sd.setVisible(true);
-      p.add(sd);
-   }
+      /* make display page */
+      Page displayPage = new Page(cagestring, 800, 800);
+      displayPage.resetCurPos();
+      displayPage.descHelper("Cage ID: Cage "+cageNum);
+      displayPage.descHelper("Cage Name: "+cagestring);
+      displayPage.descHelper("Cage IP: "+c.getIP());
+      displayPage.resetCurPos();
 
-   public void resetCurPos(){
-      curPos=30;
+      add(new Button(newButtonX, newButtonY, 40, 150, cagestring, displayPage));
+      newButtonY+=50;
    }
 
 }

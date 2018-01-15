@@ -1,15 +1,15 @@
 import java.util.*;
 
 public class Cage {
-   private int cageID;
-   private int lightOnTime;
-   private int lightOffTime;
+   private String cageID;
+   private String lightOnTime;
+   private String lightOffTime;
    private Experiment exp;
    private Mouse inhabitant;
-   private Pi p;
+   private String p; /* ip address of pi */
    private boolean expOngoing;
-   
-   public Cage(int cage, Experiment exper, Mouse mouse, Pi pi, boolean going, int lightOn, int lightOff){
+
+   /*public Cage(String cage, Experiment exper, Mouse mouse, String pi, boolean going, int lightOn, int lightOff){
       cageID = cage;
       exp = exper;
       inhabitant = mouse;
@@ -17,27 +17,35 @@ public class Cage {
       expOngoing = going;
       lightOnTime = lightOn;
       lightOffTime = lightOff;
+   }*/
+   public Cage(String cage, String pi){
+      cageID = cage;
+      p = pi;
    }
-   
-   public int getID(){
+   public Cage(){}
+
+   public String getID(){
       return cageID;
    }
-   
+   public String getIP(){
+      return p;
+   }
+
    public void setInhabitant(Mouse mouse){
       inhabitant = mouse;
    }
-   
+
    public Mouse getInhabitant(){
       return inhabitant;
    }
-   
+
    public void process(String fileName){
-   
+
    }
-   
-   public void setLightTimes(int on, int off){
+
+   public void setLightTimes(String on, String off){
       lightOnTime = on;
       lightOffTime = off;
    }
-   
+
 }
