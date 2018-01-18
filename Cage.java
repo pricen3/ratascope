@@ -27,6 +27,9 @@ public class Cage {
    public String getID(){
       return cageID;
    }
+   public String getName(){
+      return cageID;
+   }
    public String getIP(){
       return p;
    }

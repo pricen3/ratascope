@@ -125,7 +125,7 @@ public class cagePage extends Page {
       }
       cageNum++;
       String cagestring = c.getID();
-      if(cagestring == ""){
+      if(cagestring.equals("")){
          cagestring = "Cage "+cageNum;
       }
 

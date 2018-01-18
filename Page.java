@@ -148,11 +148,12 @@ public class Page {
       }
    }
 
-   /* helper function for adding text to page */
+   /* helper function for adding text to page
+   * Note: can only be 500 char long */
    public void descHelper(String desc){
       int position =  getCurPos();
       JLabel sd = new JLabel(desc);
-      sd.setBounds(28, position, 200, 20);
+      sd.setBounds(28, position, 500, 20);
       position += 30;
       sd.setVisible(true);
       this.add(sd);
@@ -212,7 +213,7 @@ public class Page {
    }
 
    /* Creates date menu drop down */
-   public JComboBox<String> dateMenuHelper(int xpos, int ypos, boolean numberedTimes){
+   /*public JComboBox<String> dateMenuHelper(int xpos, int ypos, boolean numberedTimes){
       String[] month = {"January", "Febuary", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
       String[] day = {"1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28"};
       String[] choices = choices1;
@@ -224,5 +225,5 @@ public class Page {
       cb.setVisible(true);
       this.add(cb);
       return cb;
-   }
+   }*/
 }
