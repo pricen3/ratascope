@@ -22,6 +22,7 @@ public class expPage extends Page {
       private Page p;
       private Button b;
       private SubmitButtonClick tracker;
+      private int numClicked = 0;
       public void setLoc(int i, Page page){
          newTimeLoc = i;
          p = page;
@@ -35,16 +36,29 @@ public class expPage extends Page {
       }
       public void mouseClicked(MouseEvent e) {
          /* time menu (12:00 through 11:30)*/
-         tracker.watchOnTime(p.timeMenuHelper(500, newTimeLoc, true));
-         tracker.watchOnTime(p.timeMenuHelper(600, newTimeLoc, false));
-         tracker.watchOffTime(p.timeMenuHelper(500, newTimeLoc+30, true));
-         tracker.watchOffTime(p.timeMenuHelper(600, newTimeLoc+30, false));
+         if(numClicked == 0){
+            tracker.watchOnTime(p.timeMenuHelper(440, newTimeLoc, true));
+            tracker.watchOnTime(p.timeMenuHelper(520, newTimeLoc, false));
+            tracker.watchOffTime(p.timeMenuHelper(440, newTimeLoc+30, true));
+            tracker.watchOffTime(p.timeMenuHelper(520, newTimeLoc+30, false));
+         }else if(numClicked == 1){
+            tracker.watchOnTime(p.timeMenuHelper(580, newTimeLoc, true));
+            tracker.watchOnTime(p.timeMenuHelper(660, newTimeLoc, false));
+            tracker.watchOffTime(p.timeMenuHelper(580, newTimeLoc+30, true));
+            tracker.watchOffTime(p.timeMenuHelper(660, newTimeLoc+30, false));
+         }else{
+            tracker.watchOnTime(p.timeMenuHelper(160, newTimeLoc, true));
+            tracker.watchOnTime(p.timeMenuHelper(240, newTimeLoc, false));
+            tracker.watchOffTime(p.timeMenuHelper(160, newTimeLoc+30, true));
+            tracker.watchOffTime(p.timeMenuHelper(240, newTimeLoc+30, false));
+            b.remove();
+         }
+         numClicked++;
          /*p.timeMenuHelper(500, newTimeLoc, true);
          p.timeMenuHelper(500, newTimeLoc+30, true);
           {"AM", "PM"} menus
          p.timeMenuHelper(600, newTimeLoc, false);
          p.timeMenuHelper(600, newTimeLoc+30, false);*/
-         b.remove();
       }
    }
    private static class SubmitButtonClick extends MouseAdapter {
@@ -92,11 +106,12 @@ public class expPage extends Page {
          expPage expP = getExpPage();
          int tSize = textInputs.size();
          int onTiSize = onTimeInputs.size();
-         int offTiSize = onTimeInputs.size();
+         int offTiSize = offTimeInputs.size();
          int cSize = cageInputs.size();
          String resName="";
          String[] cageName = new String[cSize];
-         String[] timeName = new String[onTiSize];
+         String[] onTimeName = new String[onTiSize];
+         String[] offTimeName = new String[offTiSize];
 
          /* get researcher name */
          JTextField rName = textInputs.get(0);
@@ -118,13 +133,16 @@ public class expPage extends Page {
             cur = cageInputs.get(i);
             cageName[i] = (String)cur.getSelectedItem();
             cage = expP.getCageFromString(cageName[i]); //TODO: handle cages w same name
-            for (int j = 0; j < 2; j++){ //TODO: figure out with bobby what we wants
-               curTime = onTimeInputs.get((i*2)+j);
-               timeName[(i*2)+j] = (String)curTime.getSelectedItem();
-               System.out.print(timeName[(i*2)+j]);
-            }
             //cage.setLightTimes(timeName[(i*2)]+" "+timeName[(i*2)+1], timeName[(i*2)+2]+" "+timeName[(i*2)+3]);
             ex.setCage(cage);
+         }
+         for (int j = 0; j < onTimeInputs.size(); j++){ //TODO: figure out with bobby what we wants
+            curTime = onTimeInputs.get(j);
+            onTimeName[j] = (String)curTime.getSelectedItem();
+            System.out.print(onTimeName[j]);
+            curTime = offTimeInputs.get(j);
+            offTimeName[j] = (String)curTime.getSelectedItem();
+            System.out.print(offTimeName[j]);
          }
          System.out.println("2");
          System.out.println(resName);
@@ -192,11 +210,30 @@ public class expPage extends Page {
 
       newTimeDropDown("Select a start time:\t", p, submitB, true);
       newTimeDropDown("Select an end time:\t", p, submitB, false);
-      newCageDropDown("Select Cage for Experiment:\t", p, submitB);
+      int newTimeLoc = p.getCurPos();
+      int position = newTimeLoc + 30;
+      TimeLocMouse mouse = new TimeLocMouse();
+      mouse.setLoc(position, p);
+      mouse.setTracker(submitB);
+      Button b = new Button(28, newTimeLoc, 20, 170, "Add Time Interval", mouse);
+      mouse.setB(b);
+      p.add(b);
+      p.setCurPos(position);
+      newTimeLightDropDown(p, submitB);
+      position += 60;
+      p.setCurPos(position);
+
+      newCageDropDown("Select Cage for Experiment:\t", p, submitB, 0);
 
       p.add(new Button(540, 80, 40, 175, "Add More Cages", new MouseAdapter() {
+         int clicked = 0;
          public void mouseClicked(MouseEvent e) {
-            newCageDropDown("Select Cage for Experiment:\t", p, submitB);
+            clicked ++;
+            if(clicked < 8){
+               newCageDropDown("Select Cage for Experiment:\t", p, submitB, clicked);
+               return;
+            }
+            newCageDropDown("", p, submitB, clicked);
          }
       }));
       p.add(new Button(540, 130, 40, 175, "Cancel", new MouseAdapter() {
@@ -211,10 +248,21 @@ public class expPage extends Page {
    }
 
    /* adds drop down menu on Page p for setting a cage */
-   private void newCageDropDown(String desc, Page p, SubmitButtonClick tracker){
+   private void newCageDropDown(String desc, Page p, SubmitButtonClick tracker, int numCages){
       /* obtain positions for cage dropdown and assocciated time menu */
+      /* Check if column reset is needed (there can only be 9 cages per column)*/
+      int resetPos = numCages%8;
       int position =  p.getCurPos();
-      int newTimeLoc = position + 60;
+      if(resetPos == 0 && numCages!=0){
+         /* set position to top of next column */
+         position -= 240;
+      }
+      int columnNum = numCages/8;
+      if (columnNum == 4){
+         /* cage capacity full */
+         return;
+      }
+
       /* create cage menu and add to page */
       JLabel sd = new JLabel(desc);
       sd.setBounds(28, position, 200, 20);
@@ -229,23 +277,13 @@ public class expPage extends Page {
          sdChoices[i+1] = curCage.getID();
       }
       JComboBox<String> cb = new JComboBox<String>(sdChoices);
-      cb.setBounds(300, position, 100, 20);
+      cb.setBounds(300+(110*columnNum), position, 100, 20);
       cb.setVisible(true);
       p.add(cb);
-      /* Add additional time interval menu option for cage */
-      position += 30;
-      TimeLocMouse mouse = new TimeLocMouse();
-      mouse.setLoc(newTimeLoc, p);
-      mouse.setTracker(tracker);
-      Button b = new Button(50, position, 20, 170, "Add Time Interval", mouse);
-      mouse.setB(b);
-      p.add(b);
-      /* update curPos for page */
       position += 30;
       p.setCurPos(position);
       /* add time interval options */
       tracker.watch(cb);
-      newTimeLightDropDown(p, tracker);
    }
 
    /* adds drop down menu on Page p for setting a time at position pos */
@@ -258,9 +296,9 @@ public class expPage extends Page {
       p.add(sd);
       /* watch menu as start time or end time depending on input boolean */
       if(Start){
-         tracker.watchStart(p.timeMenuHelper(300, position, true), p.timeMenuHelper(400, position, false));
+         tracker.watchStart(p.timeMenuHelper(300, position, true), p.timeMenuHelper(380, position, false));
       }else{
-         tracker.watchEnd(p.timeMenuHelper(300, position, true), p.timeMenuHelper(400, position, false));
+         tracker.watchEnd(p.timeMenuHelper(300, position, true), p.timeMenuHelper(380, position, false));
       }
       /* update curPos */
       position += 30;
@@ -275,12 +313,12 @@ public class expPage extends Page {
       int position =  p.getCurPos();
 
       tracker.watchOnTime(p.timeMenuHelper(300, position, true));
-      tracker.watchOnTime(p.timeMenuHelper(400, position, false));
+      tracker.watchOnTime(p.timeMenuHelper(380, position, false));
       tracker.watchOffTime(p.timeMenuHelper(300, position+30, true));
-      tracker.watchOffTime(p.timeMenuHelper(400, position+30, false));
+      tracker.watchOffTime(p.timeMenuHelper(380, position+30, false));
 
-      p.descHelper("      Turn Lights On:");
-      p.descHelper("      Turn Lights Off:");
+      p.descHelper("Turn Lights On:");
+      p.descHelper("Turn Lights Off:");
    }
 
    public void addExpButton(Experiment exp){

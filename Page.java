@@ -206,7 +206,12 @@ public class Page {
          choices = choices2;
       }
       JComboBox<String> cb = new JComboBox<String>(choices);
-      cb.setBounds(xpos,ypos, 80, 20);
+      if(numberedTimes){
+         cb.setBounds(xpos,ypos, 80, 20);
+      }else{
+         cb.setBounds(xpos,ypos, 50, 20);
+      }
+
       cb.setVisible(true);
       this.add(cb);
       return cb;
