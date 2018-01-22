@@ -168,7 +168,15 @@ public class Page {
       position += 30;
       error.setVisible(true);
       this.add(error);
-      //setCurPos(position);
+   }
+   public void errorMessHelper(String desc, int pos){
+      /* this alternate function inclueds a specified error position */
+      int position =  pos;
+      error = new JLabel("<html><font color='red'>*"+desc+"</font></html>");
+      error.setBounds(28, position, 600, 20);
+      position += 30;
+      error.setVisible(true);
+      this.add(error);
    }
    public void clearErrors(){
       if(error==null){

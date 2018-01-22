@@ -103,13 +103,17 @@ public class expPage extends Page {
       }
 
       public void mouseClicked(MouseEvent e) {
+         p.clearErrors();
+         if(!checkErrors()){
+            return;
+         }
          expPage expP = getExpPage();
          int tSize = textInputs.size();
          int onTiSize = onTimeInputs.size();
          int offTiSize = offTimeInputs.size();
          int cSize = cageInputs.size();
          String resName="";
-         String[] cageName = new String[cSize];
+         String cageName;
          String[] onTimeName = new String[onTiSize];
          String[] offTimeName = new String[offTiSize];
 
@@ -127,28 +131,63 @@ public class expPage extends Page {
 
          /* get cage input information */
          Cage cage = new Cage();
-         JComboBox<String> curTime, cur;
+         JComboBox<String> curTime1, curTime2, cur;
          System.out.println(cSize);
          for (int i = 0; i < cSize; i ++){
             cur = cageInputs.get(i);
-            cageName[i] = (String)cur.getSelectedItem();
-            cage = expP.getCageFromString(cageName[i]); //TODO: handle cages w same name
-            //cage.setLightTimes(timeName[(i*2)]+" "+timeName[(i*2)+1], timeName[(i*2)+2]+" "+timeName[(i*2)+3]);
-            ex.setCage(cage);
+            cageName = (String)cur.getSelectedItem();
+            if(!cageName.equals("")){
+               cage = expP.getCageFromString(cageName); //TODO: handle cages w same name
+               ex.setCage(cage);
+            }
          }
-         for (int j = 0; j < onTimeInputs.size(); j++){ //TODO: figure out with bobby what we wants
-            curTime = onTimeInputs.get(j);
-            onTimeName[j] = (String)curTime.getSelectedItem();
-            System.out.print(onTimeName[j]);
-            curTime = offTimeInputs.get(j);
-            offTimeName[j] = (String)curTime.getSelectedItem();
-            System.out.print(offTimeName[j]);
+         String s;
+         for (int j = 0; j < onTimeInputs.size(); j+=2){
+            /* Time lights turn on */
+            curTime1 = onTimeInputs.get(j);
+            curTime2 = onTimeInputs.get(j+1);
+            s = (String)curTime1.getSelectedItem();
+            ex.addOnTime(s+" "+(String)curTime2.getSelectedItem());
+            /* Time lights turn off */
+            curTime1 = offTimeInputs.get(j);
+            curTime2 = offTimeInputs.get(j+1);
+            s = (String)curTime1.getSelectedItem();
+            ex.addOffTime(s+" "+(String)curTime2.getSelectedItem());
          }
          System.out.println("2");
          System.out.println(resName);
          expP.addExpButton(ex);
          p.close();
          expP.resetCurPos();
+      }
+
+      /* check for user input errors */
+      public boolean checkErrors(){
+         //TODO add in functionality to see that times make sense and multi instances of same cage
+         /* test for at least one valid cage */
+         String t, test = "";
+         JComboBox<String> cur;
+         int cIS =  cageInputs.size();
+         for(int i = 0; i < cIS; i++){
+            cur = cageInputs.get(i);
+            t = (String)cur.getSelectedItem();
+            if(!t.equals("")){
+               test = t;
+            }
+         }
+         if(test.equals("")){
+            p.errorMessHelper("*At least one valid cage required.", 480);
+            return false;
+         }
+
+         /* test for valid researcher name */
+         JTextField rName = textInputs.get(0);
+         String resName = rName.getText();
+         if(resName.equals("")){
+            p.errorMessHelper("*Researcher name required.", 480);
+            return false;
+         }
+         return true;
       }
    }
 
@@ -330,6 +369,7 @@ public class expPage extends Page {
          }
          newButtonY = 80;
       }
+      /* write list of cages */
       ArrayList<Cage> cages = exp.getCages();
       String cageString = "Assocciated Cages: ";
       Cage cur;
@@ -342,6 +382,25 @@ public class expPage extends Page {
             cageString += cur.getName();
          }
       }
+      /* write list of on and off times */
+      String onString = "Lights on: ";
+      String offString = "Lights off: ";
+      String time;
+      ArrayList<String> ons = exp.getOnTimes();
+      ArrayList<String> offs = exp.getOffTimes();
+      for(int i = 0; i < ons.size(); i++){
+         time = ons.get(i);
+         if(i > 0){
+            onString += ", "+time;
+            time = offs.get(i);
+            offString += ", "+time;
+         }else{
+            /* edge case */
+            onString += time;
+            time = offs.get(i);
+            offString += time;
+         }
+      }
       //expNum++;
       String expString = exp.getName();
 
@@ -352,6 +411,8 @@ public class expPage extends Page {
       displayPage.descHelper(cageString);
       displayPage.descHelper("Start Time: "+exp.getStart());
       displayPage.descHelper("End Time: "+exp.getEnd());
+      displayPage.descHelper(onString);
+      displayPage.descHelper(offString);
       displayPage.resetCurPos();
 
       add(new Button(newButtonX, newButtonY, 40, 150, expString, displayPage));

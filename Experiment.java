@@ -13,6 +13,8 @@ public class Experiment{
    //TODO: These need to be changed to some sort of time-class
    private String startTime;
    private String endTime;
+   private ArrayList<String> onTimes;
+   private ArrayList<String> offTimes;
 
    public Experiment(String research, String mName, String start, String end){
       cages = new ArrayList<Cage>();
@@ -20,6 +22,8 @@ public class Experiment{
       name = mName;
       startTime = start;
       endTime = end;
+      onTimes = new ArrayList<String>();
+      offTimes = new ArrayList<String>();
    }
 
    public void run(){
@@ -55,11 +59,26 @@ public class Experiment{
    public String getEnd(){
       return endTime;
    }
+   public ArrayList<String> getOnTimes(){
+      return onTimes;
+   }
+   public ArrayList<String> getOffTimes(){
+      return offTimes;
+   }
+
    public ArrayList<Cage> getCages(){
       return cages;
    }
 
    public void cancelExperiment(ArrayList<Cage> c){
+   }
+
+   public void addOnTime(String t){
+      onTimes.add(t);
+   }
+
+   public void addOffTime(String t){
+      offTimes.add(t);
    }
 
 }
