@@ -112,14 +112,17 @@ public class expPage extends Page {
          int onTiSize = onTimeInputs.size();
          int offTiSize = offTimeInputs.size();
          int cSize = cageInputs.size();
-         String resName="";
+         //String resName, expName;
          String cageName;
          String[] onTimeName = new String[onTiSize];
          String[] offTimeName = new String[offTiSize];
 
+         /* get experiment name */
          /* get researcher name */
          JTextField rName = textInputs.get(0);
-         resName = rName.getText();
+         String expName = rName.getText();
+         rName = textInputs.get(1);
+         String resName = rName.getText();
 
          /* get time input information */
          String start = (String)startTime.getSelectedItem();
@@ -127,7 +130,8 @@ public class expPage extends Page {
          String end = (String)endTime.getSelectedItem();
          String eAP = (String)endAOrP.getSelectedItem();
 
-         Experiment ex = new Experiment(resName, "Experiment "+expP.incrimentGetExpNum(), start+" "+sAP,end+" "+eAP);
+         //Experiment ex = new Experiment(resName, "Experiment "+expP.incrimentGetExpNum(), start+" "+sAP,end+" "+eAP);
+         Experiment ex = new Experiment(resName, expName, start+" "+sAP,end+" "+eAP);
 
          /* get cage input information */
          Cage cage = new Cage();
@@ -137,8 +141,9 @@ public class expPage extends Page {
             cur = cageInputs.get(i);
             cageName = (String)cur.getSelectedItem();
             if(!cageName.equals("")){
-               cage = expP.getCageFromString(cageName); //TODO: handle cages w same name
+               cage = expP.getCageFromString(cageName);
                ex.setCage(cage);
+               expP.claimCage(cage);
             }
          }
          String s;
@@ -163,28 +168,45 @@ public class expPage extends Page {
 
       /* check for user input errors */
       public boolean checkErrors(){
-         //TODO add in functionality to see that times make sense and multi instances of same cage
+         //TODO add in functionality to see that times make sense
          /* test for at least one valid cage */
          String t, test = "";
          JComboBox<String> cur;
          int cIS =  cageInputs.size();
+         int arrayPos = 0;
+         String[] cageArray = new String[cIS];
          for(int i = 0; i < cIS; i++){
             cur = cageInputs.get(i);
             t = (String)cur.getSelectedItem();
             if(!t.equals("")){
                test = t;
+               for(int j = 0; j < arrayPos; j++){
+                  if(test.equals(cageArray[j])){
+                     p.errorMessHelper("Duplicate cages.", 480);
+                     return false;
+                  }
+               }
+               cageArray[arrayPos] = test;
+               arrayPos++;
             }
          }
          if(test.equals("")){
-            p.errorMessHelper("*At least one valid cage required.", 480);
+            p.errorMessHelper("At least one valid cage required.", 480);
             return false;
          }
 
-         /* test for valid researcher name */
+         /* test for valid EXPERIMENT name */
          JTextField rName = textInputs.get(0);
          String resName = rName.getText();
          if(resName.equals("")){
-            p.errorMessHelper("*Researcher name required.", 480);
+            p.errorMessHelper("Experiment name required.", 480);
+            return false;
+         }
+         /* test for valid researcher name */
+         rName = textInputs.get(1);
+         resName = rName.getText();
+         if(resName.equals("")){
+            p.errorMessHelper("Researcher name required.", 480);
             return false;
          }
          return true;
@@ -239,12 +261,14 @@ public class expPage extends Page {
    private void newExpPageCreate(){
       Page p = new Page("New Experiment", 750, 500, new CloseReset());
       p.addBackground("campr_new_exp.png", 0, 0);
-      p.descHelper("Name: Experiment "+(expNum+1));
+      //p.descHelper("Name: Experiment "+(expNum+1));
+      JTextField expName = p.newTextInput("Experiment name:", 100);
       JTextField resName = p.newTextInput("Researcher name:", 100);
 
       /* Keep track of user inputs with submit button */
       SubmitButtonClick submitB = new SubmitButtonClick();
       submitB.setPage(p);
+      submitB.watch(expName);
       submitB.watch(resName);
 
       newTimeDropDown("Select a start time:\t", p, submitB, true);
@@ -347,8 +371,6 @@ public class expPage extends Page {
 
    /* adds drop down menu on Page p for setting a time */
    private void newTimeLightDropDown(Page p, SubmitButtonClick tracker){
-      //TODO: distinguish between light on and off times
-      //TODO: make lights correspond to cages
       int position =  p.getCurPos();
 
       tracker.watchOnTime(p.timeMenuHelper(300, position, true));
@@ -408,6 +430,7 @@ public class expPage extends Page {
       Page displayPage = new Page(expString, 800, 800);
       displayPage.resetCurPos();
       displayPage.descHelper("Experiment ID: "+expString);
+      displayPage.descHelper("Researcher: "+exp.getResearcher());
       displayPage.descHelper(cageString);
       displayPage.descHelper("Start Time: "+exp.getStart());
       displayPage.descHelper("End Time: "+exp.getEnd());
@@ -430,5 +453,13 @@ public class expPage extends Page {
          }
       }
       return new Cage();
+   }
+   /* Removes cage from list of available cages */
+   public void claimCage(String cageName){
+      Cage forRemoval = getCageFromString(cageName);
+      cages.remove(forRemoval);
+   }
+   public void claimCage(Cage forRemoval){
+      cages.remove(forRemoval);
    }
 }
