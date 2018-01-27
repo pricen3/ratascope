@@ -4,6 +4,8 @@ import java.awt.Dimension;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+/* Command line: java -classpath ".:sqlite-jdbc-3.21.0.jar" CAMPRDatabase */
+
 public class CAMPR {
 
    public static Boolean DEBUG = false;

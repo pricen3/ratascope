@@ -46,6 +46,7 @@ public class cagePage extends Page {
             p.errorMessHelper("IP Address field required.");
          }else{
             Cage c = new Cage(cName, ipAdd);
+            CAMPRDatabase.cageInput(cName, ipAdd);
             cP.addCageButton(c);
             eP.addCage(c);
             p.close();
@@ -78,6 +79,14 @@ public class cagePage extends Page {
          }
       }));
       exists = true;
+      ArrayList<Cage> savedCages = CAMPRDatabase.cageSelect();
+      int savedSize = savedCages.size();
+      expPage eP = expPage.getExpPage(); //TODO change this later for used cages in db
+      for(int i = 0; i < savedSize; i++){
+         addCageButton(savedCages.get(i));
+         eP.addCage(savedCages.get(i));
+      }
+
    }
 
    /* METHODS */

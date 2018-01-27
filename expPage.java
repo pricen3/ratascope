@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+//TODO Light durrations, exp durration
+//TODO Cancel Exp button
 public class expPage extends Page {
 
    private static class CloseReset extends WindowAdapter {
@@ -17,7 +19,7 @@ public class expPage extends Page {
          getExpPage().resetCurPos();
       }
    }
-   private static class TimeLocMouse extends MouseAdapter {
+   /*private static class TimeLocMouse extends MouseAdapter {
       private int newTimeLoc;
       private Page p;
       private Button b;
@@ -35,7 +37,7 @@ public class expPage extends Page {
          tracker = t;
       }
       public void mouseClicked(MouseEvent e) {
-         /* time menu (12:00 through 11:30)*/
+         /* time menu (12:00 through 11:30)
          if(numClicked == 0){
             tracker.watchOnTime(p.timeMenuHelper(440, newTimeLoc, true));
             tracker.watchOnTime(p.timeMenuHelper(520, newTimeLoc, false));
@@ -58,37 +60,43 @@ public class expPage extends Page {
          p.timeMenuHelper(500, newTimeLoc+30, true);
           {"AM", "PM"} menus
          p.timeMenuHelper(600, newTimeLoc, false);
-         p.timeMenuHelper(600, newTimeLoc+30, false);*/
+         p.timeMenuHelper(600, newTimeLoc+30, false);
       }
-   }
+   }*/
    private static class SubmitButtonClick extends MouseAdapter {
       private Page p;
 
       /* The following keep track of user inputs */
       private ArrayList<JTextField> textInputs;
-      private ArrayList<JComboBox<String>> onTimeInputs, offTimeInputs;
+      //private ArrayList<JComboBox<String>> onTimeInputs, offTimeInputs;
       private ArrayList<JComboBox<String>> cageInputs;
-      private JComboBox<String> startTime, startAOrP, endTime, endAOrP;
+      private JComboBox<String> startTime, startAOrP, onTimeInput, offTimeInput;
+      private JTextField durration;
 
       public void setPage(Page page){
          p = page;
          textInputs = new ArrayList<JTextField>();
-         onTimeInputs = new ArrayList<JComboBox<String>>();
-         offTimeInputs = new ArrayList<JComboBox<String>>();
+         //onTimeInputs = new ArrayList<JComboBox<String>>();
+         //offTimeInputs = new ArrayList<JComboBox<String>>();
+         onTimeInput = new JComboBox<String>();
+         offTimeInput = new JComboBox<String>();
+         //offTimeInputs = new JTextField();
          cageInputs = new ArrayList<JComboBox<String>>();
          startTime = new JComboBox<String>();
          startAOrP = new JComboBox<String>();
-         endTime = new JComboBox<String>();
-         endAOrP = new JComboBox<String>();
+         //endTime = new JComboBox<String>();
+         durration = new JTextField();
+         //endAOrP = new JComboBox<String>();
       }
       public void watch(JTextField userInput){
          textInputs.add(userInput);
       }
       public void watchOnTime(JComboBox<String> userInput){
-         onTimeInputs.add(userInput);
+         onTimeInput=userInput;
       }
       public void watchOffTime(JComboBox<String> userInput){
-         offTimeInputs.add(userInput);
+         offTimeInput = userInput;
+         //offTimeInputs.add(userInput);
       }
       public void watch(JComboBox<String> userInput){
          cageInputs.add(userInput);
@@ -97,9 +105,8 @@ public class expPage extends Page {
          startTime = time;
          startAOrP = amOrPm;
       }
-      public void watchEnd(JComboBox<String> time, JComboBox<String> amOrPm){
-         endTime = time;
-         endAOrP = amOrPm;
+      public void watchEnd(JTextField time){
+         durration = time;
       }
 
       public void mouseClicked(MouseEvent e) {
@@ -109,13 +116,13 @@ public class expPage extends Page {
          }
          expPage expP = getExpPage();
          int tSize = textInputs.size();
-         int onTiSize = onTimeInputs.size();
-         int offTiSize = offTimeInputs.size();
+         //int onTiSize = onTimeInputs.size();
+         //int offTiSize = offTimeInputs.size();
          int cSize = cageInputs.size();
          //String resName, expName;
          String cageName;
-         String[] onTimeName = new String[onTiSize];
-         String[] offTimeName = new String[offTiSize];
+         //String[] onTimeName = new String[onTiSize];
+         //String[] offTimeName = new String[offTiSize];
 
          /* get experiment name */
          /* get researcher name */
@@ -127,11 +134,11 @@ public class expPage extends Page {
          /* get time input information */
          String start = (String)startTime.getSelectedItem();
          String sAP = (String)startAOrP.getSelectedItem();
-         String end = (String)endTime.getSelectedItem();
-         String eAP = (String)endAOrP.getSelectedItem();
+         String end = durration.getText();
+         //String eAP = (String)endAOrP.getSelectedItem();
 
          //Experiment ex = new Experiment(resName, "Experiment "+expP.incrimentGetExpNum(), start+" "+sAP,end+" "+eAP);
-         Experiment ex = new Experiment(resName, expName, start+" "+sAP,end+" "+eAP);
+         Experiment ex = new Experiment(resName, expName, start+" "+sAP,end);
 
          /* get cage input information */
          Cage cage = new Cage();
@@ -147,19 +154,20 @@ public class expPage extends Page {
             }
          }
          String s;
-         for (int j = 0; j < onTimeInputs.size(); j+=2){
+         //for (int j = 0; j < onTimeInputs.size(); j+=2){
             /* Time lights turn on */
-            curTime1 = onTimeInputs.get(j);
-            curTime2 = onTimeInputs.get(j+1);
-            s = (String)curTime1.getSelectedItem();
-            ex.addOnTime(s+" "+(String)curTime2.getSelectedItem());
+            //curTime1 = onTimeInputs.get(j);
+            //curTime2 = onTimeInputs.get(j+1);
+         s = (String)onTimeInput.getSelectedItem();
+            //ex.addOnTime(s+" "+(String)curTime2.getSelectedItem());
+         ex.addOnDurr((String)s);
             /* Time lights turn off */
-            curTime1 = offTimeInputs.get(j);
-            curTime2 = offTimeInputs.get(j+1);
-            s = (String)curTime1.getSelectedItem();
-            ex.addOffTime(s+" "+(String)curTime2.getSelectedItem());
-         }
-         System.out.println("2");
+            //curTime1 = offTimeInputs.get(j);
+            //curTime2 = offTimeInputs.get(j+1);
+         s = (String)offTimeInput.getSelectedItem();
+         ex.addOffDurr((String)s);
+         //}
+         //System.out.println("2");
          System.out.println(resName);
          expP.addExpButton(ex);
          p.close();
@@ -168,7 +176,6 @@ public class expPage extends Page {
 
       /* check for user input errors */
       public boolean checkErrors(){
-         //TODO add in functionality to see that times make sense
          /* test for at least one valid cage */
          String t, test = "";
          JComboBox<String> cur;
@@ -207,6 +214,12 @@ public class expPage extends Page {
          resName = rName.getText();
          if(resName.equals("")){
             p.errorMessHelper("Researcher name required.", 480);
+            return false;
+         }
+         String lightOn = (String)onTimeInput.getSelectedItem();
+         String lightOff = (String)offTimeInput.getSelectedItem();
+         if(lightOn.equals("0") && lightOff.equals("0")){
+            p.errorMessHelper("Invalid lighting intervals.", 480);
             return false;
          }
          return true;
@@ -272,15 +285,15 @@ public class expPage extends Page {
       submitB.watch(resName);
 
       newTimeDropDown("Select a start time:\t", p, submitB, true);
-      newTimeDropDown("Select an end time:\t", p, submitB, false);
-      int newTimeLoc = p.getCurPos();
-      int position = newTimeLoc + 30;
-      TimeLocMouse mouse = new TimeLocMouse();
-      mouse.setLoc(position, p);
-      mouse.setTracker(submitB);
-      Button b = new Button(28, newTimeLoc, 20, 170, "Add Time Interval", mouse);
-      mouse.setB(b);
-      p.add(b);
+      submitB.watchEnd(p.newTextInput("Enter a durration (hours):\t", 100));
+      int position = p.getCurPos();
+      //int position = newTimeLoc + 30;
+      //TimeLocMouse mouse = new TimeLocMouse();
+      //mouse.setLoc(position, p);
+      //mouse.setTracker(submitB);
+      //Button b = new Button(28, newTimeLoc, 20, 170, "Add Time Interval", mouse);
+      //mouse.setB(b);
+      //p.add(b);
       p.setCurPos(position);
       newTimeLightDropDown(p, submitB);
       position += 60;
@@ -349,6 +362,30 @@ public class expPage extends Page {
       tracker.watch(cb);
    }
 
+   /* adds drop down menu on Page p for setting a light durration */
+   private JComboBox<String> newDurrDropDown(String desc, Page p){
+      /* obtain position for dropdown */
+
+      int position =  p.getCurPos();
+
+      /* create cage menu and add to page */
+      JLabel sd = new JLabel(desc);
+      sd.setBounds(28, position, 200, 20);
+      sd.setVisible(true);
+      p.add(sd);
+
+      String[] sdChoices = {"0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24"};
+
+      JComboBox<String> cb = new JComboBox<String>(sdChoices);
+      cb.setBounds(300, position, 100, 20);
+      cb.setVisible(true);
+      p.add(cb);
+      position += 30;
+      p.setCurPos(position);
+      return cb;
+   }
+
+
    /* adds drop down menu on Page p for setting a time at position pos */
    public void newTimeDropDown(String desc, Page p, SubmitButtonClick tracker, boolean Start){
       int position =  p.getCurPos();
@@ -361,7 +398,7 @@ public class expPage extends Page {
       if(Start){
          tracker.watchStart(p.timeMenuHelper(300, position, true), p.timeMenuHelper(380, position, false));
       }else{
-         tracker.watchEnd(p.timeMenuHelper(300, position, true), p.timeMenuHelper(380, position, false));
+         //tracker.watchEnd(p.timeMenuHelper(300, position, true), p.timeMenuHelper(380, position, false));
       }
       /* update curPos */
       position += 30;
@@ -373,13 +410,15 @@ public class expPage extends Page {
    private void newTimeLightDropDown(Page p, SubmitButtonClick tracker){
       int position =  p.getCurPos();
 
-      tracker.watchOnTime(p.timeMenuHelper(300, position, true));
-      tracker.watchOnTime(p.timeMenuHelper(380, position, false));
-      tracker.watchOffTime(p.timeMenuHelper(300, position+30, true));
-      tracker.watchOffTime(p.timeMenuHelper(380, position+30, false));
+      //tracker.watchOnTime(p.timeMenuHelper(300, position, true));
+      //tracker.watchOnTime(p.timeMenuHelper(380, position, false));
+      //tracker.watchOffTime(p.timeMenuHelper(300, position+30, true));
+      //tracker.watchOffTime(p.timeMenuHelper(380, position+30, false));
+      tracker.watchOnTime(newDurrDropDown("Select lights on durration", p));
+      tracker.watchOffTime(newDurrDropDown("Select lights off durration", p));
 
-      p.descHelper("Turn Lights On:");
-      p.descHelper("Turn Lights Off:");
+      //p.descHelper("Turn Lights On:");
+      //p.descHelper("Turn Lights Off:");
    }
 
    public void addExpButton(Experiment exp){
@@ -405,10 +444,10 @@ public class expPage extends Page {
          }
       }
       /* write list of on and off times */
-      String onString = "Lights on: ";
-      String offString = "Lights off: ";
+      String onString = "Lights on durration: "+exp.getOnDurr();
+      String offString = "Lights off durration: "+exp.getOffDurr();
       String time;
-      ArrayList<String> ons = exp.getOnTimes();
+      /*ArrayList<String> ons = exp.getOnTimes();
       ArrayList<String> offs = exp.getOffTimes();
       for(int i = 0; i < ons.size(); i++){
          time = ons.get(i);
@@ -417,12 +456,12 @@ public class expPage extends Page {
             time = offs.get(i);
             offString += ", "+time;
          }else{
-            /* edge case */
+            /* edge case
             onString += time;
             time = offs.get(i);
             offString += time;
          }
-      }
+      }*/
       //expNum++;
       String expString = exp.getName();
 
@@ -433,7 +472,7 @@ public class expPage extends Page {
       displayPage.descHelper("Researcher: "+exp.getResearcher());
       displayPage.descHelper(cageString);
       displayPage.descHelper("Start Time: "+exp.getStart());
-      displayPage.descHelper("End Time: "+exp.getEnd());
+      displayPage.descHelper("Experiment Durration: "+exp.getEnd());
       displayPage.descHelper(onString);
       displayPage.descHelper(offString);
       displayPage.resetCurPos();

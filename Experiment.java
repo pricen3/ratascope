@@ -1,4 +1,4 @@
-
+//TODO get rid of list that are now durrations
 /*I am still trying to figure out the time part
    and will have that part done monday. hopefully*/
 
@@ -13,8 +13,8 @@ public class Experiment{
    //TODO: These need to be changed to some sort of time-class
    private String startTime;
    private String endTime;
-   private ArrayList<String> onTimes;
-   private ArrayList<String> offTimes;
+   private String onDurr;
+   private String offDurr;
 
    public Experiment(String research, String mName, String start, String end){
       cages = new ArrayList<Cage>();
@@ -22,8 +22,18 @@ public class Experiment{
       name = mName;
       startTime = start;
       endTime = end;
-      onTimes = new ArrayList<String>();
-      offTimes = new ArrayList<String>();
+      //onTimes = new ArrayList<String>();
+      //offTimes = new ArrayList<String>();
+   }
+
+   public Experiment(String research, String mName, String start, String end, String onD, String offD){
+      cages = new ArrayList<Cage>();
+      researcher = research;
+      name = mName;
+      startTime = start;
+      endTime = end;
+      onDurr = onD;
+      offDurr = offD;
    }
 
    public void run(){
@@ -59,11 +69,11 @@ public class Experiment{
    public String getEnd(){
       return endTime;
    }
-   public ArrayList<String> getOnTimes(){
-      return onTimes;
+   public String getOnDurr(){
+      return onDurr;
    }
-   public ArrayList<String> getOffTimes(){
-      return offTimes;
+   public String getOffDurr(){
+      return offDurr;
    }
 
    public ArrayList<Cage> getCages(){
@@ -73,12 +83,12 @@ public class Experiment{
    public void cancelExperiment(ArrayList<Cage> c){
    }
 
-   public void addOnTime(String t){
-      onTimes.add(t);
+   public void addOnDurr(String t){
+      onDurr=t;
    }
 
-   public void addOffTime(String t){
-      offTimes.add(t);
+   public void addOffDurr(String t){
+      offDurr=t;
    }
 
 }
