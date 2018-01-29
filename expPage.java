@@ -201,6 +201,18 @@ public class expPage extends Page {
             p.errorMessHelper("At least one valid cage required.", 480);
             return false;
          }
+         String end = durration.getText();
+         if(end.equals("")){
+            p.errorMessHelper("durration required.", 480);
+            return false;
+         }else{
+            try{
+               Integer.parseInt(end);
+            }catch (Exception ex){
+               p.errorMessHelper("durration must be an integer.", 480);
+               return false;
+            }
+         }
 
          /* test for valid EXPERIMENT name */
          JTextField rName = textInputs.get(0);
@@ -284,16 +296,10 @@ public class expPage extends Page {
       submitB.watch(expName);
       submitB.watch(resName);
 
-      newTimeDropDown("Select a start time:\t", p, submitB, true);
-      submitB.watchEnd(p.newTextInput("Enter a durration (hours):\t", 100));
+      newTimeDropDown("Select a start time*:\t", p, submitB, true);
+      p.descHelper("*the experiment will begin at this time within 24 hours.");
+      submitB.watchEnd(p.newTextInput("Enter a durration (hours):\t", 50));
       int position = p.getCurPos();
-      //int position = newTimeLoc + 30;
-      //TimeLocMouse mouse = new TimeLocMouse();
-      //mouse.setLoc(position, p);
-      //mouse.setTracker(submitB);
-      //Button b = new Button(28, newTimeLoc, 20, 170, "Add Time Interval", mouse);
-      //mouse.setB(b);
-      //p.add(b);
       p.setCurPos(position);
       newTimeLightDropDown(p, submitB);
       position += 60;
@@ -370,7 +376,7 @@ public class expPage extends Page {
 
       /* create cage menu and add to page */
       JLabel sd = new JLabel(desc);
-      sd.setBounds(28, position, 200, 20);
+      sd.setBounds(28, position, 300, 20);
       sd.setVisible(true);
       p.add(sd);
 
@@ -410,15 +416,8 @@ public class expPage extends Page {
    private void newTimeLightDropDown(Page p, SubmitButtonClick tracker){
       int position =  p.getCurPos();
 
-      //tracker.watchOnTime(p.timeMenuHelper(300, position, true));
-      //tracker.watchOnTime(p.timeMenuHelper(380, position, false));
-      //tracker.watchOffTime(p.timeMenuHelper(300, position+30, true));
-      //tracker.watchOffTime(p.timeMenuHelper(380, position+30, false));
-      tracker.watchOnTime(newDurrDropDown("Select lights on durration", p));
-      tracker.watchOffTime(newDurrDropDown("Select lights off durration", p));
-
-      //p.descHelper("Turn Lights On:");
-      //p.descHelper("Turn Lights Off:");
+      tracker.watchOnTime(newDurrDropDown("Select lights on durration (hours):", p));
+      tracker.watchOffTime(newDurrDropDown("Select lights off durration (hours):", p));
    }
 
    public void addExpButton(Experiment exp){
@@ -444,38 +443,32 @@ public class expPage extends Page {
          }
       }
       /* write list of on and off times */
-      String onString = "Lights on durration: "+exp.getOnDurr();
-      String offString = "Lights off durration: "+exp.getOffDurr();
+      String onString = "Lights on durration: "+exp.getOnDurr()+" hours";
+      String offString = "Lights off durration: "+exp.getOffDurr()+" hours";
       String time;
-      /*ArrayList<String> ons = exp.getOnTimes();
-      ArrayList<String> offs = exp.getOffTimes();
-      for(int i = 0; i < ons.size(); i++){
-         time = ons.get(i);
-         if(i > 0){
-            onString += ", "+time;
-            time = offs.get(i);
-            offString += ", "+time;
-         }else{
-            /* edge case
-            onString += time;
-            time = offs.get(i);
-            offString += time;
-         }
-      }*/
-      //expNum++;
       String expString = exp.getName();
 
       /* make display page */
-      Page displayPage = new Page(expString, 800, 800);
+      Page displayPage = new Page(expString, 750, 500);
+      displayPage.addBackground("campr_new_exp.png", 0, 0);
       displayPage.resetCurPos();
       displayPage.descHelper("Experiment ID: "+expString);
       displayPage.descHelper("Researcher: "+exp.getResearcher());
       displayPage.descHelper(cageString);
       displayPage.descHelper("Start Time: "+exp.getStart());
-      displayPage.descHelper("Experiment Durration: "+exp.getEnd());
+      displayPage.descHelper("Experiment Durration: "+exp.getEnd()+" hours");
       displayPage.descHelper(onString);
       displayPage.descHelper(offString);
       displayPage.resetCurPos();
+
+      /* Add Cancelation button */
+      // TODO add cancelation logic and background
+      displayPage.add(new Button(540, 30, 40, 175, "Cancel Experiment", new MouseAdapter() {
+         public void mouseClicked(MouseEvent e) {
+            displayPage.resetCurPos();
+            displayPage.close();
+         }
+      }));
 
       add(new Button(newButtonX, newButtonY, 40, 150, expString, displayPage));
       newButtonY+=50;

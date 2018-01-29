@@ -139,12 +139,23 @@ public class cagePage extends Page {
       }
 
       /* make display page */
-      Page displayPage = new Page(cagestring, 800, 800);
+      Page displayPage = new Page(cagestring, 750, 500);
+      displayPage.addBackground("campr_new_cage.png", 0, 0);
       displayPage.resetCurPos();
       displayPage.descHelper("Cage ID: Cage "+cageNum);
       displayPage.descHelper("Cage Name: "+cagestring);
       displayPage.descHelper("Cage IP: "+c.getIP());
       displayPage.resetCurPos();
+
+      /* Add Deletion button */
+      // TODO add cancelation logic and background
+      displayPage.add(new Button(540, 30, 40, 175, "Delete Cage", new MouseAdapter() {
+         public void mouseClicked(MouseEvent e) {
+            displayPage.resetCurPos();
+            displayPage.close();
+         }
+      }));
+
 
       add(new Button(newButtonX, newButtonY, 40, 150, cagestring, displayPage));
       newButtonY+=50;
