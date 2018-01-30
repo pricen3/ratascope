@@ -38,17 +38,17 @@ public class CAMPRDatabase{
          }
          else if (table == "EXPERIMENT"){
             sql = "CREATE TABLE IF NOT EXISTS EXPERIMENT " +
-                     "(EXP_NUM    INT    NOT NULL, " +
-                     " RESEARCHER STRING NOT NULL, " +
-                     " START_TIME STRING NOT NULL, " +
-                     " DURATION   INT    NOT NULL, " +
-                     " CAGE_NAME  STRING NOT NULL, " +
-                     " MOUSE_NAME STRING NOT NULL)";
+                     "(EXP_NAME   TEXT NOT NULL, " +
+                     " RESEARCHER TEXT NOT NULL, " +
+                     " START_TIME TEXT NOT NULL, " +
+                     " DUR_ON     TEXT NOT NULL, " +
+                     " DUR_OFF    TEXT NOT NULL, " +
+                     " CAGE_NAME  TEXT NOT NULL)";
          }
          else{
             sql = "CREATE TABLE IF NOT EXISTS MOUSE " +
-                   "(MOUSE_NAME STRING NOT NULL, " +
-                    "NOTESS     BLOB)";
+                   "(MOUSE_NAME TEXT NOT NULL, " +
+                    "NOTES     BLOB)";
          }
          stmt.executeUpdate(sql);
          stmt.close();
@@ -62,8 +62,8 @@ public class CAMPRDatabase{
    }
 
    public static void cageInput(String name, String ip){
-      //String name = cage.name();
-      //String = cage.ip();
+      //String name = cage.getName();
+      //String = cage.getip();
       //System.out.println(name);
       Connection conn = null;
       Statement stmt = null;
@@ -91,6 +91,48 @@ public class CAMPRDatabase{
    }
 
    //experiment input
+   public static void expInput(Experiment exp){
+
+         Connection conn = null;
+         Statement stmt = null;
+
+         String name = exp.getName();
+         String researcher = exp.getResearcher();
+         String start = exp.getStart();
+         String durOn = exp.getOnDurr();
+         String durOff = exp.getOffDurr();
+         ArrayList<Cage> cages = exp.getCages();
+
+         try{
+
+            createTable("EXPERIMENT");
+
+            conn = DriverManager.getConnection("jdbc:sqlite:CAMPR.db");         
+            stmt = conn.createStatement();
+
+            for(int i = 0; i < cages.size(); i++){
+               //Cage cage = cages.get(i);           
+               String sql = "INSERT INTO EXPERIMENT (EXP_NAME, RESEARCHER, START_TIME, DUR_ON, DUR_OFF, CAGE, MOUSE)" +
+                              "VALUES ('" + name + "', '" +
+                                 researcher + "', '" +
+                                 start + "', '" +
+                                 durOn + "', '" +
+                                 durOff + "', '" +
+                                 cages.get(i) + "')";
+
+               stmt.executeUpdate(sql);
+               System.out.println(sql);
+            }
+            stmt.close();
+            //conn.commit();
+            conn.close();
+         }
+         catch (Exception e){
+         //do something here
+         System.out.println("failed in insert");
+         System.err.println(e.getMessage());
+         }
+      }
 
    //mouse input
 
@@ -144,12 +186,13 @@ public class CAMPRDatabase{
 
          while(rs.next()){
             //int id = rs.getInt("ID");
-            int expNum = rs.getInt("EXP_NUM");
+            String expName = rs.getString("EXP_NAME");
             String researcher = rs.getString("RESEARCHER");
             String startTime = rs.getString("START_TIME");
-            int duration = rs.getInt("DURATION");
+            String durOn = rs.getString("DUR_ON");
+            String durOff = rs.getString("DUR_OFF");
             String cage = rs.getString("CAGE_NAME");
-            String mouse = rs.getString("MOUSE");
+            //String mouse = rs.getString("MOUSE");
 
             System.out.println(/*"ID: " + id + */"experiment: " + expNum + ", cage: " + cage);
          }
