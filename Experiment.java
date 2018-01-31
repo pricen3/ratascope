@@ -1,4 +1,4 @@
-//TODO get rid of list that are now durrations
+
 /*I am still trying to figure out the time part
    and will have that part done monday. hopefully*/
 
@@ -6,7 +6,7 @@ import java.util.*;
 import java.time.*;
 
 public class Experiment{
-   private ArrayList<Cage> cages;
+   private ArrayList<MouseCage> cages;
    private String researcher;
    private String name;
 
@@ -17,7 +17,7 @@ public class Experiment{
    private String offDurr;
 
    public Experiment(String research, String mName, String start, String end){
-      cages = new ArrayList<Cage>();
+      cages = new ArrayList<MouseCage>();
       researcher = research;
       name = mName;
       startTime = start;
@@ -27,7 +27,7 @@ public class Experiment{
    }
 
    public Experiment(String research, String mName, String start, String end, String onD, String offD){
-      cages = new ArrayList<Cage>();
+      cages = new ArrayList<MouseCage>();
       researcher = research;
       name = mName;
       startTime = start;
@@ -37,7 +37,7 @@ public class Experiment{
    }
 
    public void run(){
-   /*add stuff to make the experiment run*/
+   /* TODO: add stuff to make the experiment run*/
    }
 
    //public File aquireData(){
@@ -53,13 +53,14 @@ public class Experiment{
    /*not sure how this is different from cancel*/
    }
 
-   public void setCage(Cage c){
+   public void setCage(MouseCage c){
       cages.add(c);
    }
    public void setFakeCage(String c){
       /* For Debugging // Testing */
-      Cage fakeCage = new Cage(c, "0");
-      cages.add(fakeCage);
+      Cage fCage = new Cage(c, "0");
+      MouseCage fake = new MouseCage(fCage, "not a real mouse");
+      cages.add(fake);
    }
 
    public String getName(){
@@ -81,11 +82,12 @@ public class Experiment{
       return offDurr;
    }
 
-   public ArrayList<Cage> getCages(){
+   public ArrayList<MouseCage> getCages(){
       return cages;
    }
 
-   public void cancelExperiment(ArrayList<Cage> c){
+   public void cancelExperiment(ArrayList<MouseCage> c){
+      //TODO: figure this snot out
    }
 
    public void addOnDurr(String t){

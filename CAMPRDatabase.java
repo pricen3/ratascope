@@ -103,7 +103,7 @@ public class CAMPRDatabase{
          String expDur = exp.getExpDurr();
          String durOn = exp.getOnDurr();
          String durOff = exp.getOffDurr();
-         ArrayList<Cage> cages = exp.getCages();
+         ArrayList<MouseCage> cages = exp.getCages();
 
          try{
 

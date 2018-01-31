@@ -23,7 +23,7 @@ public class expPage extends Page {
       private Page p;
 
       /* The following keep track of user inputs */
-      private ArrayList<JTextField> textInputs;
+      private ArrayList<JTextField> textInputs, mouseInputs;
       //private ArrayList<JComboBox<String>> onTimeInputs, offTimeInputs;
       private ArrayList<JComboBox<String>> cageInputs;
       private JComboBox<String> startTime, startAOrP, onTimeInput, offTimeInput;
@@ -32,17 +32,13 @@ public class expPage extends Page {
       public void setPage(Page page){
          p = page;
          textInputs = new ArrayList<JTextField>();
-         //onTimeInputs = new ArrayList<JComboBox<String>>();
-         //offTimeInputs = new ArrayList<JComboBox<String>>();
+         mouseInputs = new ArrayList<JTextField>();
          onTimeInput = new JComboBox<String>();
          offTimeInput = new JComboBox<String>();
-         //offTimeInputs = new JTextField();
          cageInputs = new ArrayList<JComboBox<String>>();
          startTime = new JComboBox<String>();
          startAOrP = new JComboBox<String>();
-         //endTime = new JComboBox<String>();
          durration = new JTextField();
-         //endAOrP = new JComboBox<String>();
       }
       public void watch(JTextField userInput){
          textInputs.add(userInput);
@@ -63,6 +59,9 @@ public class expPage extends Page {
       }
       public void watchEnd(JTextField time){
          durration = time;
+      }
+      public void watchMouse(JTextField userInput){
+         mouseInputs.add(userInput);
       }
 
       public void mouseClicked(MouseEvent e) {
@@ -96,16 +95,21 @@ public class expPage extends Page {
          //Experiment ex = new Experiment(resName, "Experiment "+expP.incrimentGetExpNum(), start+" "+sAP,end+" "+eAP);
          Experiment ex = new Experiment(resName, expName, start+" "+sAP,end);
 
-         /* get cage input information */
+         /* get cage and mouse ID input information */
          Cage cage = new Cage();
+         MouseCage mCage;
          JComboBox<String> curTime1, curTime2, cur;
-         System.out.println(cSize);
+         //System.out.println(cSize);
+         JTextField curMouse;
+         String curID; /* Will hold mouse ID */
          for (int i = 0; i < cSize; i ++){
             cur = cageInputs.get(i);
             cageName = (String)cur.getSelectedItem();
             if(!cageName.equals("")){
+               curMouse = mouseInputs.get(i);
+               curID = curMouse.getText();
                cage = expP.getCageFromString(cageName);
-               ex.setCage(cage);
+               ex.setCage(new MouseCage(cage, curID));
                expP.claimCage(cage);
             }
          }
@@ -133,40 +137,56 @@ public class expPage extends Page {
 
       /* check for user input errors */
       public boolean checkErrors(){
-         /* test for at least one valid cage */
+         /* test cages */
          String t, test = "";
          JComboBox<String> cur;
          int cIS =  cageInputs.size();
          int arrayPos = 0;
          String[] cageArray = new String[cIS];
+         String[] mouseArray = new String[cIS];
+         /* check for duplicates */
+         JTextField curMouse;
+         String curID; /* Will hold mouse ID */
          for(int i = 0; i < cIS; i++){
+            curMouse = mouseInputs.get(i);
+            curID = curMouse.getText();
             cur = cageInputs.get(i);
             t = (String)cur.getSelectedItem();
             if(!t.equals("")){
+               if(curID.equals("")){
+                  p.errorMessHelper("Missing Field - Mouse ID.", 600);
+                  return false;
+               }
                test = t;
                for(int j = 0; j < arrayPos; j++){
                   if(test.equals(cageArray[j])){
-                     p.errorMessHelper("Duplicate cages.", 480);
+                     p.errorMessHelper("Duplicate cages.", 600);
+                     return false;
+                  }
+                  if(curID.equals(mouseArray[j])){
+                     p.errorMessHelper("Duplicate Mouse ID's.", 600);
                      return false;
                   }
                }
                cageArray[arrayPos] = test;
+               mouseArray[arrayPos] = curID;
                arrayPos++;
             }
          }
+         /* test for at least one valid cage */
          if(test.equals("")){
-            p.errorMessHelper("At least one valid cage required.", 480);
+            p.errorMessHelper("At least one valid cage required.", 600);
             return false;
          }
          String end = durration.getText();
          if(end.equals("")){
-            p.errorMessHelper("durration required.", 480);
+            p.errorMessHelper("durration required.", 600);
             return false;
          }else{
             try{
                Integer.parseInt(end);
             }catch (Exception ex){
-               p.errorMessHelper("durration must be an integer.", 480);
+               p.errorMessHelper("durration must be an integer.", 600);
                return false;
             }
          }
@@ -175,20 +195,20 @@ public class expPage extends Page {
          JTextField rName = textInputs.get(0);
          String resName = rName.getText();
          if(resName.equals("")){
-            p.errorMessHelper("Experiment name required.", 480);
+            p.errorMessHelper("Experiment name required.", 600);
             return false;
          }
          /* test for valid researcher name */
          rName = textInputs.get(1);
          resName = rName.getText();
          if(resName.equals("")){
-            p.errorMessHelper("Researcher name required.", 480);
+            p.errorMessHelper("Researcher name required.", 600);
             return false;
          }
          String lightOn = (String)onTimeInput.getSelectedItem();
          String lightOff = (String)offTimeInput.getSelectedItem();
          if(lightOn.equals("0") && lightOff.equals("0")){
-            p.errorMessHelper("Invalid lighting intervals.", 480);
+            p.errorMessHelper("Invalid lighting intervals.", 600);
             return false;
          }
          return true;
@@ -248,7 +268,7 @@ public class expPage extends Page {
    }
 
    private void newExpPageCreate(){
-      Page p = new Page("New Experiment", 750, 500, new CloseReset());
+      Page p = new Page("New Experiment", 750, 630, new CloseReset());
       p.addBackground("campr_new_exp.png", 0, 0);
       //p.descHelper("Name: Experiment "+(expNum+1));
       JTextField expName = p.newTextInput("Experiment name:", 100);
@@ -268,6 +288,7 @@ public class expPage extends Page {
       newTimeLightDropDown(p, submitB);
       position += 60;
       p.setCurPos(position);
+      p.descHelper("Select cage(s) for experiment. Enter ID of resident mouse in conjoined text box:");
 
       newCageDropDown("Select Cage for Experiment:\t", p, submitB, 0);
 
@@ -297,23 +318,24 @@ public class expPage extends Page {
    private void newCageDropDown(String desc, Page p, SubmitButtonClick tracker, int numCages){
       /* obtain positions for cage dropdown and assocciated time menu */
       /* Check if column reset is needed (there can only be 9 cages per column)*/
-      int resetPos = numCages%8;
+      int resetPos = numCages%10;
       int position =  p.getCurPos();
       if(resetPos == 0 && numCages!=0){
          /* set position to top of next column */
-         position -= 240;
+         position -= 300;
       }
-      int columnNum = numCages/8;
-      if (columnNum == 4){
+      int columnNum = numCages/10;
+      if (columnNum == 3){
          /* cage capacity full */
          return;
       }
 
-      /* create cage menu and add to page */
-      JLabel sd = new JLabel(desc);
+      /* Create description */
+      /*JLabel sd = new JLabel(desc);
       sd.setBounds(28, position, 200, 20);
       sd.setVisible(true);
-      p.add(sd);
+      p.add(sd);*/
+      /* create cage menu and add to page */
       int numberOfCages = cages.size();
       String[] sdChoices = new String[numberOfCages+1];
       sdChoices[0] = "";
@@ -323,13 +345,18 @@ public class expPage extends Page {
          sdChoices[i+1] = curCage.getID();
       }
       JComboBox<String> cb = new JComboBox<String>(sdChoices);
-      cb.setBounds(300+(110*columnNum), position, 100, 20);
+      cb.setBounds(28+(210*columnNum), position, 100, 20);
       cb.setVisible(true);
       p.add(cb);
+      JTextField mouseInput = new JTextField();
+      mouseInput.setBounds(128+(210*columnNum), position, 100, 20);
+      mouseInput.setVisible(true);
+      p.add(mouseInput);
       position += 30;
       p.setCurPos(position);
       /* add time interval options */
       tracker.watch(cb);
+      tracker.watchMouse(mouseInput);
    }
 
    /* adds drop down menu on Page p for setting a light durration */
@@ -373,7 +400,6 @@ public class expPage extends Page {
       /* update curPos */
       position += 30;
       p.setCurPos(position);
-      //TODO add date stuff
    }
 
    /* adds drop down menu on Page p for setting a time */
@@ -394,11 +420,13 @@ public class expPage extends Page {
          newButtonY = 80;
       }
       /* write list of cages */
-      ArrayList<Cage> cages = exp.getCages();
+      ArrayList<MouseCage> cages = exp.getCages();
       String cageString = "Assocciated Cages: ";
       Cage cur;
+      MouseCage curMC;
       for(int i = 0; i < cages.size(); i++){
-         cur = cages.get(i);
+         curMC = cages.get(i);
+         cur = curMC.getCage();
          if(i > 0){
             cageString += ", "+cur.getName();
          }else{

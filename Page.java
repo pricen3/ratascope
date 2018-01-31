@@ -153,7 +153,7 @@ public class Page {
    public void descHelper(String desc){
       int position =  getCurPos();
       JLabel sd = new JLabel(desc);
-      sd.setBounds(28, position, 500, 20);
+      sd.setBounds(28, position, 800, 20);
       position += 30;
       sd.setVisible(true);
       this.add(sd);
