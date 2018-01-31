@@ -12,7 +12,7 @@ public class Experiment{
 
    //TODO: These need to be changed to some sort of time-class
    private String startTime;
-   private String endTime;
+   private String expDurr;
    private String onDurr;
    private String offDurr;
 
@@ -21,7 +21,7 @@ public class Experiment{
       researcher = research;
       name = mName;
       startTime = start;
-      endTime = end;
+      expDurr = end;
       //onTimes = new ArrayList<String>();
       //offTimes = new ArrayList<String>();
    }
@@ -31,7 +31,7 @@ public class Experiment{
       researcher = research;
       name = mName;
       startTime = start;
-      endTime = end;
+      expDurr = end;
       onDurr = onD;
       offDurr = offD;
    }
@@ -56,6 +56,11 @@ public class Experiment{
    public void setCage(Cage c){
       cages.add(c);
    }
+   public void setFakeCage(String c){
+      /* For Debugging // Testing */
+      Cage fakeCage = new Cage(c, "0");
+      cages.add(fakeCage);
+   }
 
    public String getName(){
       return name;
@@ -66,8 +71,8 @@ public class Experiment{
    public String getStart(){
       return startTime;
    }
-   public String getEnd(){
-      return endTime;
+   public String getExpDurr(){
+      return expDurr;
    }
    public String getOnDurr(){
       return onDurr;

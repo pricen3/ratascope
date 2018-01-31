@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-//TODO Light durrations, exp durration
 //TODO Cancel Exp button
 public class expPage extends Page {
 
@@ -19,50 +18,7 @@ public class expPage extends Page {
          getExpPage().resetCurPos();
       }
    }
-   /*private static class TimeLocMouse extends MouseAdapter {
-      private int newTimeLoc;
-      private Page p;
-      private Button b;
-      private SubmitButtonClick tracker;
-      private int numClicked = 0;
-      public void setLoc(int i, Page page){
-         newTimeLoc = i;
-         p = page;
-         b=null;
-      }
-      public void setB(Button but){
-         b = but;
-      }
-      public void setTracker(SubmitButtonClick t){
-         tracker = t;
-      }
-      public void mouseClicked(MouseEvent e) {
-         /* time menu (12:00 through 11:30)
-         if(numClicked == 0){
-            tracker.watchOnTime(p.timeMenuHelper(440, newTimeLoc, true));
-            tracker.watchOnTime(p.timeMenuHelper(520, newTimeLoc, false));
-            tracker.watchOffTime(p.timeMenuHelper(440, newTimeLoc+30, true));
-            tracker.watchOffTime(p.timeMenuHelper(520, newTimeLoc+30, false));
-         }else if(numClicked == 1){
-            tracker.watchOnTime(p.timeMenuHelper(580, newTimeLoc, true));
-            tracker.watchOnTime(p.timeMenuHelper(660, newTimeLoc, false));
-            tracker.watchOffTime(p.timeMenuHelper(580, newTimeLoc+30, true));
-            tracker.watchOffTime(p.timeMenuHelper(660, newTimeLoc+30, false));
-         }else{
-            tracker.watchOnTime(p.timeMenuHelper(160, newTimeLoc, true));
-            tracker.watchOnTime(p.timeMenuHelper(240, newTimeLoc, false));
-            tracker.watchOffTime(p.timeMenuHelper(160, newTimeLoc+30, true));
-            tracker.watchOffTime(p.timeMenuHelper(240, newTimeLoc+30, false));
-            b.remove();
-         }
-         numClicked++;
-         /*p.timeMenuHelper(500, newTimeLoc, true);
-         p.timeMenuHelper(500, newTimeLoc+30, true);
-          {"AM", "PM"} menus
-         p.timeMenuHelper(600, newTimeLoc, false);
-         p.timeMenuHelper(600, newTimeLoc+30, false);
-      }
-   }*/
+
    private static class SubmitButtonClick extends MouseAdapter {
       private Page p;
 
@@ -169,9 +125,10 @@ public class expPage extends Page {
          //}
          //System.out.println("2");
          System.out.println(resName);
+         CAMPRDatabase.expInput(ex); //////////////////////////////////////////////////// uncomment
          expP.addExpButton(ex);
          p.close();
-         expP.resetCurPos();
+         expP.resetCurPos();////////////////////////
       }
 
       /* check for user input errors */
@@ -264,6 +221,13 @@ public class expPage extends Page {
             newExpPageCreate();
          }
       }));
+
+      ArrayList<Experiment> savedExps = CAMPRDatabase.experimentSelect();
+      int savedSize = savedExps.size();
+      for(int i = 0; i < savedSize; i++){
+         addExpButton(savedExps.get(i));
+      }
+
       exists = true;
    }
 
@@ -456,7 +420,7 @@ public class expPage extends Page {
       displayPage.descHelper("Researcher: "+exp.getResearcher());
       displayPage.descHelper(cageString);
       displayPage.descHelper("Start Time: "+exp.getStart());
-      displayPage.descHelper("Experiment Durration: "+exp.getEnd()+" hours");
+      displayPage.descHelper("Experiment Durration: "+exp.getExpDurr()+" hours");
       displayPage.descHelper(onString);
       displayPage.descHelper(offString);
       displayPage.resetCurPos();
