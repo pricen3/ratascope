@@ -3,14 +3,24 @@ import java.lang.Integer;
 import java.awt.Dimension;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
 
 /* Command line: java -classpath ".:sqlite-jdbc-3.21.0.jar" CAMPRDatabase */
 
 public class CAMPR {
 
    public static Boolean DEBUG = false;
+   private static ArrayList<Experiment> ongoing = new ArrayList<Experiment>();
+   private static ArrayList<Experiment> complete = new ArrayList<Experiment>();
+   private static ArrayList<Cage> available = new ArrayList<Cage>();
+   private static ArrayList<Cage> inUse = new ArrayList<Cage>();
+
    public static void main(String[] args) throws Exception{
       try{
+         //TODO access database to produce lists of experiments//cages
+         /* populate ArrayLists */
+         available = CAMPRDatabase.cageSelect();
+
          generateMainPage();
       }catch(Exception ex){
          System.out.println("*shrug*");
@@ -38,11 +48,44 @@ public class CAMPR {
       //cPage.addBackground("camplr_logo.png");
       return cPage;
    }
-   /*public static Page generateCagePage() throws Exception{
-      Page cagePage = new Page("Cages", 550, 900);
-      cagePage.addBackground("campr_logo.png", 0, 0);
-      Button newCage = new Button(28, 32, 40, 200, "Configure New Cage", new Page("New Cage", 900, 550));
-      cagePage.add(newCage);
-      return cagePage;
-   }*/
+
+   public static ArrayList<Experiment> getOngoing(){
+      return ongoing;
+   }
+   public static ArrayList<Experiment> getComplete(){
+      return complete;
+   }
+   public static ArrayList<Cage> getAvail(){
+      return available;
+   }
+   public static ArrayList<Cage> getInUse(){
+      return inUse;
+   }
+   public static void addExp(Experiment e){
+      ongoing.add(e);
+   }
+   public static void completeExp(Experiment e){
+      complete.add(e);
+      ongoing.remove(e);
+   }
+   public static void cancelExp(Experiment e){
+      ongoing.remove(e);
+   }
+   public static void addCage(Cage c){
+      CAMPRDatabase.cageInput(c.getName(), c.getIP());
+      available.add(c);
+   }
+   public static void useCage(Cage c){
+      //TODO add some sort of database calls such that these functions are reflected in the database
+      inUse.add(c);
+      available.remove(c);
+   }
+   public static void freeCage(Cage c){
+      available.add(c);
+      inUse.remove(c);
+   }
+   public static void deleteCage(Cage c){
+      //TODO print error if cage is in use
+      available.remove(c);
+   }
 }

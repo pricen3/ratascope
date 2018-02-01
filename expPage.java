@@ -9,8 +9,10 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-
-//TODO Cancel Exp button
+//TODO store Experiments and confirm unique names
+//TODO make experiment archive
+//TODO create collect data button
+//TODO reset buttons when one is canceled or complete
 public class expPage extends Page {
 
    private static class CloseReset extends WindowAdapter {
@@ -71,13 +73,8 @@ public class expPage extends Page {
          }
          expPage expP = getExpPage();
          int tSize = textInputs.size();
-         //int onTiSize = onTimeInputs.size();
-         //int offTiSize = offTimeInputs.size();
          int cSize = cageInputs.size();
-         //String resName, expName;
          String cageName;
-         //String[] onTimeName = new String[onTiSize];
-         //String[] offTimeName = new String[offTiSize];
 
          /* get experiment name */
          /* get researcher name */
@@ -90,16 +87,13 @@ public class expPage extends Page {
          String start = (String)startTime.getSelectedItem();
          String sAP = (String)startAOrP.getSelectedItem();
          String end = durration.getText();
-         //String eAP = (String)endAOrP.getSelectedItem();
 
-         //Experiment ex = new Experiment(resName, "Experiment "+expP.incrimentGetExpNum(), start+" "+sAP,end+" "+eAP);
          Experiment ex = new Experiment(resName, expName, start+" "+sAP,end);
 
          /* get cage and mouse ID input information */
          Cage cage = new Cage();
          MouseCage mCage;
          JComboBox<String> curTime1, curTime2, cur;
-         //System.out.println(cSize);
          JTextField curMouse;
          String curID; /* Will hold mouse ID */
          for (int i = 0; i < cSize; i ++){
@@ -114,20 +108,10 @@ public class expPage extends Page {
             }
          }
          String s;
-         //for (int j = 0; j < onTimeInputs.size(); j+=2){
-            /* Time lights turn on */
-            //curTime1 = onTimeInputs.get(j);
-            //curTime2 = onTimeInputs.get(j+1);
          s = (String)onTimeInput.getSelectedItem();
-            //ex.addOnTime(s+" "+(String)curTime2.getSelectedItem());
          ex.addOnDurr((String)s);
-            /* Time lights turn off */
-            //curTime1 = offTimeInputs.get(j);
-            //curTime2 = offTimeInputs.get(j+1);
          s = (String)offTimeInput.getSelectedItem();
          ex.addOffDurr((String)s);
-         //}
-         //System.out.println("2");
          System.out.println(resName);
          CAMPRDatabase.expInput(ex); //////////////////////////////////////////////////// uncomment
          expP.addExpButton(ex);
@@ -218,7 +202,6 @@ public class expPage extends Page {
    /* FIELDS */
    private static boolean exists = false;
    private static expPage thePage;
-   private ArrayList<Cage> cages;
    private ArrayList<Button> expButtons;
    private ArrayList<Experiment> exps;
    private int expNum;
@@ -230,7 +213,7 @@ public class expPage extends Page {
    private expPage(){
       super("Experiments", 550, 900);
       expButtons = new ArrayList<Button>();
-      cages = new ArrayList<Cage>();
+      //cages = new ArrayList<Cage>(); //////////////////////////////////////////////////////////////////////////
       exps = new ArrayList<Experiment>();
       expNum = 0;
       resetCurPos();
@@ -342,6 +325,7 @@ public class expPage extends Page {
       sd.setVisible(true);
       p.add(sd);*/
       /* create cage menu and add to page */
+      ArrayList<Cage> cages = CAMPR.getAvail();
       int numberOfCages = cages.size();
       String[] sdChoices = new String[numberOfCages+1];
       sdChoices[0] = "";
@@ -472,6 +456,7 @@ public class expPage extends Page {
       // TODO add cancelation logic with database
       displayPage.add(new Button(540, 30, 40, 175, "Cancel Experiment", new MouseAdapter() {
          public void mouseClicked(MouseEvent e) {
+            exp.cancelExperiment();
             displayPage.resetCurPos();
             displayPage.close();
             expBut.remove();
@@ -479,10 +464,11 @@ public class expPage extends Page {
       }));
    }
 
-   public void addCage(Cage c){
-      cages.add(c);
-   }
+   //public void addCage(Cage c){///////////////////////////////////////////////////////////////////////////////////////////////
+   //   cages.add(c);
+   //}
    public Cage getCageFromString(String cageName){
+      ArrayList<Cage> cages = CAMPR.getAvail();
       int cSize = cages.size();
       for(int i = 0; i < cSize; i++){
          if(cageName == cages.get(i).getID()){
@@ -493,10 +479,11 @@ public class expPage extends Page {
    }
    /* Removes cage from list of available cages */
    public void claimCage(String cageName){
-      Cage forRemoval = getCageFromString(cageName);
-      cages.remove(forRemoval);
+      Cage inUse = getCageFromString(cageName);
+      //cages.remove(forRemoval);
+      CAMPR.useCage(inUse);
    }
-   public void claimCage(Cage forRemoval){
-      cages.remove(forRemoval);
+   public void claimCage(Cage inUse){
+      CAMPR.useCage(inUse);
    }
 }

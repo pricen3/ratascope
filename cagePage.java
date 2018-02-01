@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 //TODO add functionality to save default cage names if no cage name entered
+//TODO refreash buttons on both this and exp page
 
 public class cagePage extends Page {
 
@@ -37,7 +38,6 @@ public class cagePage extends Page {
       public void mouseClicked(MouseEvent e) {
          p.clearErrors();
          cagePage cP = cagePage.getCagePage();
-         expPage eP = expPage.getExpPage();
          String cName = name.getText();
          String ipAdd = ip.getText();
          if(cName.equals("")){
@@ -46,9 +46,9 @@ public class cagePage extends Page {
             p.errorMessHelper("IP Address field required.");
          }else{
             Cage c = new Cage(cName, ipAdd);
-            CAMPRDatabase.cageInput(cName, ipAdd);
+            //CAMPRDatabase.cageInput(cName, ipAdd);
+            CAMPR.addCage(c);
             cP.addCageButton(c);
-            eP.addCage(c);
             p.close();
             cP.resetCurPos();
          }
@@ -79,12 +79,10 @@ public class cagePage extends Page {
          }
       }));
       exists = true;
-      ArrayList<Cage> savedCages = CAMPRDatabase.cageSelect();
+      ArrayList<Cage> savedCages = CAMPR.getAvail(); //CAMPRDatabase.cageSelect();
       int savedSize = savedCages.size();
-      expPage eP = expPage.getExpPage(); //TODO change this later for used cages in db
       for(int i = 0; i < savedSize; i++){
          addCageButton(savedCages.get(i));
-         eP.addCage(savedCages.get(i));
       }
 
    }

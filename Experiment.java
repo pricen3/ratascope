@@ -38,6 +38,7 @@ public class Experiment{
 
    public void run(){
    /* TODO: add stuff to make the experiment run*/
+   //send script to pi
    }
 
    //public File aquireData(){
@@ -86,8 +87,10 @@ public class Experiment{
       return cages;
    }
 
-   public void cancelExperiment(ArrayList<MouseCage> c){
+   public void cancelExperiment(){
       //TODO: figure this snot out
+      //send cancel script to pis
+      //delete experiment in database
    }
 
    public void addOnDurr(String t){
