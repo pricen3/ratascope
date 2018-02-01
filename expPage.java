@@ -9,7 +9,6 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-//TODO store Experiments and confirm unique names
 //TODO make experiment archive
 //TODO create collect data button
 //TODO reset buttons when one is canceled or complete
@@ -181,6 +180,19 @@ public class expPage extends Page {
          if(resName.equals("")){
             p.errorMessHelper("Experiment name required.", 600);
             return false;
+         }else{
+            ArrayList<Experiment> allCurrent = CAMPR.getOngoing();
+            int curSize = allCurrent.size();
+            Experiment compare;
+            String compName;
+            for(int i = 0; i < curSize; i++){
+               compare = allCurrent.get(i);
+               compName = compare.getName();
+               if(resName.equals(compName)){
+                  p.errorMessHelper("Experiment name invalid due to pre-existing experiment with same name.", 600);
+                  return false;
+               }
+            }
          }
          /* test for valid researcher name */
          rName = textInputs.get(1);
@@ -269,7 +281,7 @@ public class expPage extends Page {
       submitB.watch(expName);
       submitB.watch(resName);
 
-      newTimeDropDown("Select a start time*:\t", p, submitB, true);
+      newTimeDropDown("Select a start time*:\t", p, submitB);
       p.descHelper("*the experiment will begin at this time within 24 hours.");
       submitB.watchEnd(p.newTextInput("Enter a durration (hours):\t", 50));
       int position = p.getCurPos();
@@ -279,17 +291,17 @@ public class expPage extends Page {
       p.setCurPos(position);
       p.descHelper("Select cage(s) for experiment. Enter ID of resident mouse in conjoined text box:");
 
-      newCageDropDown("Select Cage for Experiment:\t", p, submitB, 0);
+      newCageDropDown(p, submitB, 0);
 
       p.add(new Button(540, 80, 40, 175, "Add More Cages", new MouseAdapter() {
          int clicked = 0;
          public void mouseClicked(MouseEvent e) {
             clicked ++;
             if(clicked < 8){
-               newCageDropDown("Select Cage for Experiment:\t", p, submitB, clicked);
+               newCageDropDown(p, submitB, clicked);
                return;
             }
-            newCageDropDown("", p, submitB, clicked);
+            newCageDropDown(p, submitB, clicked);
          }
       }));
       p.add(new Button(540, 130, 40, 175, "Cancel", new MouseAdapter() {
@@ -304,7 +316,7 @@ public class expPage extends Page {
    }
 
    /* adds drop down menu on Page p for setting a cage */
-   private void newCageDropDown(String desc, Page p, SubmitButtonClick tracker, int numCages){
+   private void newCageDropDown(Page p, SubmitButtonClick tracker, int numCages){
       /* obtain positions for cage dropdown and assocciated time menu */
       /* Check if column reset is needed (there can only be 9 cages per column)*/
       int resetPos = numCages%10;
@@ -319,11 +331,6 @@ public class expPage extends Page {
          return;
       }
 
-      /* Create description */
-      /*JLabel sd = new JLabel(desc);
-      sd.setBounds(28, position, 200, 20);
-      sd.setVisible(true);
-      p.add(sd);*/
       /* create cage menu and add to page */
       ArrayList<Cage> cages = CAMPR.getAvail();
       int numberOfCages = cages.size();
@@ -374,19 +381,17 @@ public class expPage extends Page {
 
 
    /* adds drop down menu on Page p for setting a time at position pos */
-   public void newTimeDropDown(String desc, Page p, SubmitButtonClick tracker, boolean Start){
+   public void newTimeDropDown(String desc, Page p, SubmitButtonClick tracker){
       int position =  p.getCurPos();
       /* set instructional text */
       JLabel sd = new JLabel(desc);
       sd.setBounds(28,position,200,20);
       sd.setVisible(true);
       p.add(sd);
-      /* watch menu as start time or end time depending on input boolean */
-      if(Start){
-         tracker.watchStart(p.timeMenuHelper(300, position, true), p.timeMenuHelper(380, position, false));
-      }else{
-         //tracker.watchEnd(p.timeMenuHelper(300, position, true), p.timeMenuHelper(380, position, false));
-      }
+
+      /* watch menu as start time */
+      tracker.watchStart(p.timeMenuHelper(300, position, true), p.timeMenuHelper(380, position, false));
+
       /* update curPos */
       position += 30;
       p.setCurPos(position);
@@ -400,6 +405,7 @@ public class expPage extends Page {
       tracker.watchOffTime(newDurrDropDown("Select lights off durration (hours):", p));
    }
 
+   /* Adds button to main Experiment page for veiwing displayPage for ongoing experiment */
    public void addExpButton(Experiment exp){
       //TODO: add logic for max experiments
       if(newButtonY > 850){
@@ -413,6 +419,29 @@ public class expPage extends Page {
          } */
          newButtonY = 80;
       }
+
+      Page displayPage = expDisplayPage(exp);
+      String expString = exp.getName();
+
+      /* Create Button */
+      Button expBut = new Button(newButtonX, newButtonY, 40, 150, expString, displayPage);
+      add(expBut);
+      newButtonY+=50;
+
+      /* Add Cancelation button */
+      // TODO add cancelation logic with database
+      displayPage.add(new Button(540, 30, 40, 175, "Cancel Experiment", new MouseAdapter() {
+         public void mouseClicked(MouseEvent e) {
+            exp.cancelExperiment();
+            displayPage.resetCurPos();
+            displayPage.close();
+            expBut.remove();
+         }
+      }));
+   }
+
+   /* Creates display page for experiment */
+   public Page expDisplayPage(Experiment exp){
       /* write list of cages */
       ArrayList<MouseCage> cages = exp.getCages();
       String cageString = "Assocciated Cages: ";
@@ -445,23 +474,9 @@ public class expPage extends Page {
       displayPage.descHelper("Experiment Durration: "+exp.getExpDurr()+" hours");
       displayPage.descHelper(onString);
       displayPage.descHelper(offString);
-      displayPage.resetCurPos();
+      displayPage.resetCurPos(); //TODO do i need//want this?
 
-      /* Create Button */
-      Button expBut = new Button(newButtonX, newButtonY, 40, 150, expString, displayPage);
-      add(expBut);
-      newButtonY+=50;
-
-      /* Add Cancelation button */
-      // TODO add cancelation logic with database
-      displayPage.add(new Button(540, 30, 40, 175, "Cancel Experiment", new MouseAdapter() {
-         public void mouseClicked(MouseEvent e) {
-            exp.cancelExperiment();
-            displayPage.resetCurPos();
-            displayPage.close();
-            expBut.remove();
-         }
-      }));
+      return displayPage;
    }
 
    //public void addCage(Cage c){///////////////////////////////////////////////////////////////////////////////////////////////
