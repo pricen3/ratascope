@@ -20,6 +20,7 @@ public class CAMPR {
          //TODO access database to produce lists of experiments//cages
          /* populate ArrayLists */
          available = CAMPRDatabase.cageSelect();
+         ongoing = CAMPRDatabase.experimentSelect();
 
          generateMainPage();
       }catch(Exception ex){
@@ -62,6 +63,7 @@ public class CAMPR {
       return inUse;
    }
    public static void addExp(Experiment e){
+      CAMPRDatabase.expInput(e);
       ongoing.add(e);
    }
    public static void completeExp(Experiment e){

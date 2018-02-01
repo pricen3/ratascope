@@ -113,7 +113,7 @@ public class expPage extends Page {
          s = (String)offTimeInput.getSelectedItem();
          ex.addOffDurr((String)s);
          System.out.println(resName);
-         CAMPRDatabase.expInput(ex); //////////////////////////////////////////////////// uncomment
+         CAMPR.addExp(ex);
          expP.addExpButton(ex);
          p.close();
          expP.resetCurPos();////////////////////////
@@ -231,7 +231,7 @@ public class expPage extends Page {
          }
       }));
 
-      ArrayList<Experiment> savedExps = CAMPRDatabase.experimentSelect();
+      ArrayList<Experiment> savedExps = CAMPR.getOngoing();
       int savedSize = savedExps.size();
       for(int i = 0; i < savedSize; i++){
          addExpButton(savedExps.get(i));
