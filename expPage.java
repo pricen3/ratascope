@@ -238,6 +238,12 @@ public class expPage extends Page {
       newButtonX = 28;
       add(new Button(28, 30, 40, 150, "New Experiment", new MouseAdapter() {
          public void mouseClicked(MouseEvent e) {
+            if(newButtonY > 850){
+               //TODO: this needs testing
+               if(newButtonX + 160 > 400){
+                  errorMessHelper("Max ongoing capacity. Experiments must end before new ones may be added.", 870);
+               }
+            }
             newExpPageCreate();
          }
       }));
@@ -411,12 +417,16 @@ public class expPage extends Page {
    }
 
    public void addExpButton(Experiment exp){
+      //TODO: add logic for max experiments
       if(newButtonY > 850){
          newButtonX += 160;
+         /* The following code resizes the window to fit more experiments,
+         but doing so would reintroduce the bug of dissapearing buttons.
+         Potentially this logic will be
          if (newButtonX >= getXDim()-160){
             getFrame().setPreferredSize(new Dimension(newButtonX + 160, 900));
             reveal();
-         }
+         } */
          newButtonY = 80;
       }
       /* write list of cages */
@@ -453,17 +463,20 @@ public class expPage extends Page {
       displayPage.descHelper(offString);
       displayPage.resetCurPos();
 
+      /* Create Button */
+      Button expBut = new Button(newButtonX, newButtonY, 40, 150, expString, displayPage);
+      add(expBut);
+      newButtonY+=50;
+
       /* Add Cancelation button */
-      // TODO add cancelation logic and background
+      // TODO add cancelation logic with database
       displayPage.add(new Button(540, 30, 40, 175, "Cancel Experiment", new MouseAdapter() {
          public void mouseClicked(MouseEvent e) {
             displayPage.resetCurPos();
             displayPage.close();
+            expBut.remove();
          }
       }));
-
-      add(new Button(newButtonX, newButtonY, 40, 150, expString, displayPage));
-      newButtonY+=50;
    }
 
    public void addCage(Cage c){
