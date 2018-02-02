@@ -44,7 +44,9 @@ public class CAMPRDatabase{
                      " EXP_DUR    TEXT NOT NULL, " +
                      " DUR_ON     TEXT NOT NULL, " +
                      " DUR_OFF    TEXT NOT NULL, " +
-                     " CAGE_NAME  TEXT NOT NULL)";
+                     " CAGE_NAME  STRING NOT NULL, " +
+                     " MOUSE      STRING NOT NULL, " +
+                     " STATUS     STRING NOT NULL)";
          }
          else{
             sql = "CREATE TABLE IF NOT EXISTS MOUSE " +
@@ -113,7 +115,7 @@ public class CAMPRDatabase{
             stmt = conn.createStatement();
 
             for(int i = 0; i < cages.size(); i++){
-               //Cage cage = cages.get(i);
+               MouseCage cage = cages.get(i);
                String sql = "INSERT INTO EXPERIMENT (EXP_NAME, RESEARCHER, START_TIME, EXP_DUR, DUR_ON, DUR_OFF, CAGE_NAME)" +
                               "VALUES ('" + name + "', '" +
                                  researcher + "', '" +
@@ -121,8 +123,9 @@ public class CAMPRDatabase{
                                  expDur + "', '" +
                                  durOn + "', '" +
                                  durOff + "', '" +
-                                 cages.get(i) + "')"; /* TODO: this is returning memory addresses, try Cage.getName() */
-
+                                 cage.getCage() + "', " +
+                                 cage.getMouse() + "')";
+               
                stmt.executeUpdate(sql);
                System.out.println(sql);
             }
@@ -203,7 +206,7 @@ public class CAMPRDatabase{
             String durOff = rs.getString("DUR_OFF");
             /* TODO: retrieve information necessary to make a Cage oblect to add to the created Experiment object */
             String cage = rs.getString("CAGE_NAME");
-            //String mouse = rs.getString("MOUSE");
+            String mouse = rs.getString("MOUSE");
             curExp = new Experiment(researcher, expName, startTime, expDur, durOn, durOff);
             curExp.setFakeCage(cage); /* TODO: once Cage objects are being created, change this to setCage() */
             ret.add(curExp);
@@ -252,6 +255,27 @@ public class CAMPRDatabase{
       //do some stuff
       System.out.println("failed in select");
       System.err.println(e.getMessage());
+      }
+   }
+   
+   public static void statusUpdate(String exp){
+      Connection conn = null;
+      Statement stmt = null;
+      
+      try{
+         conn = DriverManager.getConnection("jdbc:sqlite:CAMPR.db");         
+         stmt = conn.createStatement();
+         
+         String sql = "UPDATE EXPERIMENT SET STATUS = 'COMPLETED' " +
+                  "WHERE EXP_NAME = " + exp + ";";
+         
+         stmt.executeUpdate(sql);
+         stmt.close();
+         conn.close();
+      }
+      catch (Exception e){
+         System.out.println("failed in status update");
+         System.out.println(e.getMessage());
       }
    }
 
