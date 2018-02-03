@@ -58,7 +58,6 @@ public class cagePage extends Page {
    private static boolean exists = false;
    private static cagePage thePage;
    private ArrayList<Button> cageButtons;
-   //private ArrayList<Experiment> cages;
    private int cageNum;
    private int newButtonY;
    private int newButtonX;
@@ -68,7 +67,6 @@ public class cagePage extends Page {
    private cagePage(){
       super("Cages", 550, 900);
       cageButtons = new ArrayList<Button>();
-      //cages = new ArrayList<Experiment>();
       cageNum = 0;
       newButtonY = 80;
       newButtonX = 28;
@@ -108,9 +106,9 @@ public class cagePage extends Page {
 
       submitB.watchName(p.newTextInput("Name of Cage: ", 150));
       submitB.watchIP(p.newTextInput("IP Address of Cage: ", 150));
-      p.add(new Button(540, 60, 40, 175, "Submit", submitB));
-      p.add(new Button(540, 110, 40, 175, "Get Notes"));
-      p.add(new Button(540, 160, 40, 175, "Cancel", new MouseAdapter() {
+      p.add(new Button(540, 30, 40, 175, "Submit", submitB));
+      p.add(new Button(540, 80, 40, 175, "Get Notes"));
+      p.add(new Button(540, 130, 40, 175, "Cancel", new MouseAdapter() {
          public void mouseClicked(MouseEvent e) {
             p.resetCurPos();
             p.close();
@@ -144,18 +142,36 @@ public class cagePage extends Page {
       displayPage.descHelper("Cage IP: "+c.getIP());
       displayPage.resetCurPos();
 
+      Button displayButton = new Button(newButtonX, newButtonY, 40, 150, cagestring, displayPage);
+      cageButtons.add(displayButton);
+      add(displayButton);
+      newButtonY+=50;
+
       /* Add Deletion button */
       // TODO add cancelation logic and background
       displayPage.add(new Button(540, 30, 40, 175, "Delete Cage", new MouseAdapter() {
          public void mouseClicked(MouseEvent e) {
             displayPage.resetCurPos();
             displayPage.close();
+            displayButton.remove();
+            cageButtons.remove(displayButton);
+            refreash();
          }
       }));
-
-
-      add(new Button(newButtonX, newButtonY, 40, 150, cagestring, displayPage));
-      newButtonY+=50;
    }
-
+   private void refreash(){
+      int cageButtonSize = cageButtons.size();
+      newButtonY = 80;
+      newButtonX = 28;
+      Button cur;
+      for(int i = 0; i < cageButtonSize; i++){
+         if(newButtonY > 850){
+            newButtonX += 160;
+            newButtonY = 80;
+         }
+         cur = cageButtons.get(i);
+         cur.setBounds(newButtonX, newButtonY);
+         newButtonY+=50;
+      }
+   }
 }

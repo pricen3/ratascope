@@ -75,6 +75,12 @@ class Button extends JPanel{
       y=-100;
       buttonImg.setBounds(-100,-100, w, h);
    }
+
+   public void setBounds(int xNew, int yNew){
+      x= xNew;
+      y= yNew;
+      buttonImg.setBounds(x, y, w, h);
+   }
    public JButton getImg(){
       return buttonImg;
    }

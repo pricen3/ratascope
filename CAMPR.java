@@ -42,12 +42,10 @@ public class CAMPR {
    }
    public static Page generateExpPage() throws Exception{
       expPage ePage = expPage.getExpPage();
-      //ePage.addBackground("camplr_logo.png");
       return ePage;
    }
    public static Page generateCagePage() throws Exception{
       cagePage cPage = cagePage.getCagePage();
-      //cPage.addBackground("camplr_logo.png");
       return cPage;
    }
 

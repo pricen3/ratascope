@@ -9,9 +9,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-//TODO make experiment archive
-//TODO create collect data button
-//TODO reset buttons when one is canceled or complete
+
 public class expPage extends Page {
 
    private static class CloseReset extends WindowAdapter {
@@ -25,7 +23,6 @@ public class expPage extends Page {
 
       /* The following keep track of user inputs */
       private ArrayList<JTextField> textInputs, mouseInputs;
-      //private ArrayList<JComboBox<String>> onTimeInputs, offTimeInputs;
       private ArrayList<JComboBox<String>> cageInputs;
       private JComboBox<String> startTime, startAOrP, onTimeInput, offTimeInput;
       private JTextField durration;
@@ -49,7 +46,6 @@ public class expPage extends Page {
       }
       public void watchOffTime(JComboBox<String> userInput){
          offTimeInput = userInput;
-         //offTimeInputs.add(userInput);
       }
       public void watch(JComboBox<String> userInput){
          cageInputs.add(userInput);
@@ -223,7 +219,7 @@ public class expPage extends Page {
 
    /* CONSTRUCTORS */
    private expPage(){
-      super("Experiments", 550, 900);
+      super("Ongoing Experiments", 550, 900);
       expButtons = new ArrayList<Button>();
       exps = new ArrayList<Experiment>();
       expNum = 0;
@@ -272,7 +268,6 @@ public class expPage extends Page {
    private void newExpPageCreate(){
       Page p = new Page("New Experiment", 750, 630, new CloseReset());
       p.addBackground("campr_new_exp.png", 0, 0);
-      //p.descHelper("Name: Experiment "+(expNum+1));
       JTextField expName = p.newTextInput("Experiment name:", 100);
       JTextField resName = p.newTextInput("Researcher name:", 100);
 
@@ -347,6 +342,11 @@ public class expPage extends Page {
                return;
             }
             Page displayPage = expDisplayPage(ex);
+            displayPage.add(new Button(28, 130, 40, 200, "Retrieve Results", new MouseAdapter() {
+               public void mouseClicked(MouseEvent e) {
+                  //TODO: add retrieval Logic
+               }
+            }));
             displayPage.reveal();
          }
       }));
@@ -447,7 +447,6 @@ public class expPage extends Page {
 
    /* Adds button to main Experiment page for veiwing displayPage for ongoing experiment */
    public void addExpButton(Experiment exp){
-      //TODO: add logic for max experiments
       if(newButtonY > 850){
          newButtonX += 160;
          /* The following code resizes the window to fit more experiments,
@@ -466,18 +465,36 @@ public class expPage extends Page {
       /* Create Button */
       Button expBut = new Button(newButtonX, newButtonY, 40, 150, expString, displayPage);
       add(expBut);
+      expButtons.add(expBut);
       newButtonY+=50;
 
       /* Add Cancelation button */
-      // TODO add cancelation logic with database
       displayPage.add(new Button(540, 30, 40, 175, "Cancel Experiment", new MouseAdapter() {
          public void mouseClicked(MouseEvent e) {
             exp.cancelExperiment();
             displayPage.resetCurPos();
             displayPage.close();
             expBut.remove();
+            expButtons.remove(expBut);
+            refreash();
+            // TODO delete canceled experiment from database
          }
       }));
+   }
+   private void refreash(){
+      int expButtonSize = expButtons.size();
+      newButtonY = 80;
+      newButtonX = 28;
+      Button cur;
+      for(int i = 0; i < expButtonSize; i++){
+         if(newButtonY > 850){
+            newButtonX += 160;
+            newButtonY = 80;
+         }
+         cur = expButtons.get(i);
+         cur.setBounds(newButtonX, newButtonY);
+         newButtonY+=50;
+      }
    }
 
    /* Creates display page for experiment */
@@ -519,9 +536,6 @@ public class expPage extends Page {
       return displayPage;
    }
 
-   //public void addCage(Cage c){///////////////////////////////////////////////////////////////////////////////////////////////
-   //   cages.add(c);
-   //}
    public Cage getCageFromString(String cageName){
       ArrayList<Cage> cages = CAMPR.getAvail();
       int cSize = cages.size();
@@ -535,7 +549,6 @@ public class expPage extends Page {
    /* Removes cage from list of available cages */
    public void claimCage(String cageName){
       Cage inUse = getCageFromString(cageName);
-      //cages.remove(forRemoval);
       CAMPR.useCage(inUse);
    }
    public void claimCage(Cage inUse){
