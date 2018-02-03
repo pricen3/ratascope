@@ -21,6 +21,7 @@ public class CAMPR {
          /* populate ArrayLists */
          available = CAMPRDatabase.cageSelect();
          ongoing = CAMPRDatabase.experimentSelect();
+         complete = CAMPRDatabase.experimentSelect(); //this will change
 
          generateMainPage();
       }catch(Exception ex){
@@ -89,5 +90,16 @@ public class CAMPR {
    public static void deleteCage(Cage c){
       //TODO print error if cage is in use
       available.remove(c);
+   }
+
+   /* returns completed experiment with given unique name */
+   public static Experiment getCompletedExpFromString(String expName){
+      int eSize = complete.size();
+      for(int i = 0; i < eSize; i++){
+         if(expName.equals(complete.get(i).getName())){
+            return complete.get(i);
+         }
+      }
+      return null;
    }
 }

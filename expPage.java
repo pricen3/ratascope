@@ -225,7 +225,6 @@ public class expPage extends Page {
    private expPage(){
       super("Experiments", 550, 900);
       expButtons = new ArrayList<Button>();
-      //cages = new ArrayList<Cage>(); //////////////////////////////////////////////////////////////////////////
       exps = new ArrayList<Experiment>();
       expNum = 0;
       resetCurPos();
@@ -237,11 +236,13 @@ public class expPage extends Page {
                //TODO: this needs testing
                if(newButtonX + 160 > 400){
                   errorMessHelper("Max ongoing capacity. Experiments must end before new ones may be added.", 870);
+                  return;
                }
             }
             newExpPageCreate();
          }
       }));
+      add(new Button(188, 30, 40, 310, "Completed Experiments", completeExpPageCreate()));
 
       ArrayList<Experiment> savedExps = CAMPR.getOngoing();
       int savedSize = savedExps.size();
@@ -313,6 +314,45 @@ public class expPage extends Page {
       p.add(new Button(540, 30, 40, 175, "Submit", submitB));
 
       p.reveal();
+   }
+
+   private Page completeExpPageCreate(){
+      Page compPage = new Page("Completed Experiments", 900, 200);
+      compPage.addBackground("campr_home.png");
+      compPage.descHelper("Select an experiment and click submit to view details.");
+
+      /* create experiment menu and add to page */
+      ArrayList<Experiment> exps = CAMPR.getComplete();
+      int numberOfExp = exps.size();
+      String[] expChoices = new String[numberOfExp+1];
+      expChoices[0] = "";
+      Experiment curExp;
+      for(int i = 0; i < numberOfExp; i++){
+         /* add cage to menu */
+         curExp = exps.get(i);
+         expChoices[i+1] = curExp.getName();
+      }
+      JComboBox<String> cb = new JComboBox<String>(expChoices);
+      cb.setBounds(28, compPage.getCurPos(), 190, 20);
+      cb.setVisible(true);
+      compPage.add(cb);
+
+      /* add submit button */
+      compPage.add(new Button(228, compPage.getCurPos(), 20, 150, "Submit", new MouseAdapter() {
+         public void mouseClicked(MouseEvent e) {
+            String selectedExp = (String)cb.getSelectedItem();
+            Experiment ex = CAMPR.getCompletedExpFromString(selectedExp);
+            if(ex == null){
+               compPage.errorMessHelper("Error: ensure that valid experiment was selected.", 180);
+               return;
+            }
+            Page displayPage = expDisplayPage(ex);
+            displayPage.reveal();
+         }
+      }));
+      compPage.setCurPos(compPage.getCurPos() + 30);
+
+      return compPage;
    }
 
    /* adds drop down menu on Page p for setting a cage */
@@ -451,7 +491,7 @@ public class expPage extends Page {
          curMC = cages.get(i);
          cur = curMC.getCage();
          if(i > 0){
-            cageString += ", "+cur.getName();
+            cageString += ", "+cur.getName()+" ("+curMC.getMouse()+")";
          }else{
             /* edge case */
             cageString += cur.getName();

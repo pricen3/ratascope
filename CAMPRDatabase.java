@@ -116,16 +116,17 @@ public class CAMPRDatabase{
 
             for(int i = 0; i < cages.size(); i++){
                MouseCage cage = cages.get(i);
-               String sql = "INSERT INTO EXPERIMENT (EXP_NAME, RESEARCHER, START_TIME, EXP_DUR, DUR_ON, DUR_OFF, CAGE_NAME)" +
+               String sql = "INSERT INTO EXPERIMENT (EXP_NAME, RESEARCHER, START_TIME, EXP_DUR, DUR_ON, DUR_OFF, CAGE_NAME, MOUSE, STATUS)" +
                               "VALUES ('" + name + "', '" +
                                  researcher + "', '" +
                                  start + "', '" +
                                  expDur + "', '" +
                                  durOn + "', '" +
                                  durOff + "', '" +
-                                 cage.getCage() + "', " +
-                                 cage.getMouse() + "')";
-               
+                                 cage.getCage() + "', '" +
+                                 cage.getMouse() + "', '" +
+                                 "ongoing" + "')";
+
                stmt.executeUpdate(sql);
                System.out.println(sql);
             }
@@ -257,18 +258,18 @@ public class CAMPRDatabase{
       System.err.println(e.getMessage());
       }
    }
-   
+
    public static void statusUpdate(String exp){
       Connection conn = null;
       Statement stmt = null;
-      
+
       try{
-         conn = DriverManager.getConnection("jdbc:sqlite:CAMPR.db");         
+         conn = DriverManager.getConnection("jdbc:sqlite:CAMPR.db");
          stmt = conn.createStatement();
-         
+
          String sql = "UPDATE EXPERIMENT SET STATUS = 'COMPLETED' " +
                   "WHERE EXP_NAME = " + exp + ";";
-         
+
          stmt.executeUpdate(sql);
          stmt.close();
          conn.close();

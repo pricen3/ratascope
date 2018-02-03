@@ -58,7 +58,7 @@ public class cagePage extends Page {
    private static boolean exists = false;
    private static cagePage thePage;
    private ArrayList<Button> cageButtons;
-   private ArrayList<Experiment> cages;
+   //private ArrayList<Experiment> cages;
    private int cageNum;
    private int newButtonY;
    private int newButtonX;
@@ -68,7 +68,7 @@ public class cagePage extends Page {
    private cagePage(){
       super("Cages", 550, 900);
       cageButtons = new ArrayList<Button>();
-      cages = new ArrayList<Experiment>();
+      //cages = new ArrayList<Experiment>();
       cageNum = 0;
       newButtonY = 80;
       newButtonX = 28;
