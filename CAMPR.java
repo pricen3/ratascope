@@ -86,7 +86,7 @@ public class CAMPR {
       inUse.remove(c);
    }
    public static void deleteCage(Cage c){
-      //TODO print error if cage is in use
+      //TODO remove from database
       available.remove(c);
    }
 

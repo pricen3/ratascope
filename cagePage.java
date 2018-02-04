@@ -9,7 +9,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-//TODO add functionality to save default cage names if no cage name entered
+
 //TODO refreash buttons on both this and exp page
 
 public class cagePage extends Page {
@@ -45,12 +45,48 @@ public class cagePage extends Page {
          }else if(ipAdd.equals("")){
             p.errorMessHelper("IP Address field required.");
          }else{
+            /* check for duplicates */
+            ArrayList<Cage> avail = CAMPR.getAvail();
+            ArrayList<Cage> inUse = CAMPR.getInUse();
+            int availSize = avail.size();
+            int inUseSize = inUse.size();
+            int i = max(availSize, inUseSize);
+            while(i > 0){
+               i--;
+               if(i<availSize){
+                  if(isDuplicate(cName, ipAdd, avail.get(i), p)){
+                     return;
+                  }
+               }
+               if(i<inUseSize){
+                  if(isDuplicate(cName, ipAdd, inUse.get(i), p)){
+                     return;
+                  }
+               }
+            }
             Cage c = new Cage(cName, ipAdd);
             CAMPR.addCage(c);
             cP.addCageButton(c);
             p.close();
             cP.resetCurPos();
          }
+      }
+      private int max(int x, int y){
+         if(x > y){
+            return x;
+         }
+         return y;
+      }
+      private boolean isDuplicate(String cName, String ipAdd, Cage cur, Page p){
+         if(cName.equals(cur.getName())){
+            p.errorMessHelper("Duplicate name.");
+            return true;
+         }
+         if(ipAdd.equals(cur.getIP())){
+            p.errorMessHelper("Duplicate IP address.");
+            return true;
+         }
+         return false;
       }
    }
 
@@ -140,7 +176,7 @@ public class cagePage extends Page {
       displayPage.descHelper("Cage ID: Cage "+cageNum);
       displayPage.descHelper("Cage Name: "+cagestring);
       displayPage.descHelper("Cage IP: "+c.getIP());
-      displayPage.resetCurPos();
+      //displayPage.resetCurPos();
 
       Button displayButton = new Button(newButtonX, newButtonY, 40, 150, cagestring, displayPage);
       cageButtons.add(displayButton);
@@ -151,6 +187,14 @@ public class cagePage extends Page {
       // TODO add cancelation logic and background
       displayPage.add(new Button(540, 30, 40, 175, "Delete Cage", new MouseAdapter() {
          public void mouseClicked(MouseEvent e) {
+            //Delete Cage from database
+            /* confirm cage is not in use */
+            ArrayList<Cage> inUse = CAMPR.getInUse();
+            if(inUse.contains(c)){
+               displayPage.errorMessHelper("Cage can not be deleted until it is no longer in use");
+               return;
+            }
+
             displayPage.resetCurPos();
             displayPage.close();
             displayButton.remove();
