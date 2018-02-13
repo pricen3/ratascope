@@ -342,7 +342,7 @@ public class expPage extends Page {
                return;
             }
             Page displayPage = expDisplayPage(ex);
-            displayPage.add(new Button(28, 130, 40, 200, "Retrieve Results", new MouseAdapter() {
+            displayPage.add(new Button(540, 130, 40, 200, "Retrieve Results", new MouseAdapter() {
                public void mouseClicked(MouseEvent e) {
                   //TODO: add retrieval Logic
                }

@@ -90,13 +90,13 @@ public class Experiment{
    public void cancelExperiment(){
       //TODO: figure this snot out
       //send cancel script to pis
-      //delete experiment in database
       int numCages = cages.size();
       MouseCage m;
       for(int i = 0; i < numCages; i++){
          m = cages.get(i);
          CAMPR.freeCage(m.getCage());
       }
+      CAMPR.cancelExp(this);
    }
 
    public void addOnDurr(String t){

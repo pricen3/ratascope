@@ -91,7 +91,7 @@ public class Page {
       frame.setVisible(true);
       int numButtons = buttons.size();
       for (int i=0; i < numButtons; i++){
-         System.out.println(buttons.get(i).getText());
+         //System.out.println(buttons.get(i).getText());
          back.add(buttons.get(i), new Integer(5));
       }
       back.resetBack();

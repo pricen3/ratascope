@@ -5,7 +5,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 
-/* Command line: java -classpath ".:sqlite-jdbc-3.21.0.jar" CAMPRDatabase */
+/* Command line: java -classpath ".:sqlite-jdbc-3.21.0.jar" CAMPR */
 
 public class CAMPR {
 
@@ -19,9 +19,36 @@ public class CAMPR {
       try{
          //TODO access database to produce lists of experiments//cages
          /* populate ArrayLists */
-         available = CAMPRDatabase.cageSelect();
-         ongoing = CAMPRDatabase.experimentSelect();
-         complete = CAMPRDatabase.experimentSelect(); //this will change
+         available = CAMPRDatabase.findAvailable();
+         inUse = CAMPRDatabase.findUnavailable();
+         ongoing = CAMPRDatabase.experimentSelect("ongoing");
+         complete = CAMPRDatabase.experimentSelect("completed");
+
+         ArrayList<Experiment> cur = CAMPRDatabase.experimentSelect("completed");
+
+         for(int i = 0; i < cur.size(); i++){
+            Experiment ex = cur.get(i);
+
+            String name = ex.getName();
+            String researcher = ex.getResearcher();
+            String start = ex.getStart();
+            String expDur = ex.getExpDurr();
+            String durOn = ex.getOnDurr();
+            String durOff = ex.getOffDurr();
+            ArrayList<MouseCage> cages = ex.getCages();
+
+            for(int j = 0; j < cages.size(); j++){
+               System.out.println("researcher: " + researcher +
+                                    " name: " + name +
+                                    " start: " + start +
+                                    " dur: " + expDur +
+                                    " onDur: " + durOn +
+                                    " offDur: " + durOff +
+                                    " cage: " + cages.get(j).getCage().getName() +
+                                    " mouse: " + cages.get(j).getMouse());
+            }
+         }
+         System.out.println("HERE");
 
          generateMainPage();
       }catch(Exception ex){
@@ -61,6 +88,9 @@ public class CAMPR {
    public static ArrayList<Cage> getInUse(){
       return inUse;
    }
+   public static ArrayList<Cage> getCages(){
+      return CAMPRDatabase.cageSelect();
+   }
    public static void addExp(Experiment e){
       CAMPRDatabase.expInput(e);
       ongoing.add(e);
@@ -70,6 +100,7 @@ public class CAMPR {
       ongoing.remove(e);
    }
    public static void cancelExp(Experiment e){
+      CAMPRDatabase.cancel(e.getName());
       ongoing.remove(e);
    }
    public static void addCage(Cage c){

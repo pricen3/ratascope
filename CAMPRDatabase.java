@@ -17,9 +17,9 @@ import java.sql.*;
    -statusUpdate(String exp): changes the status of the given experiment from "ongoing" to "completed"
    -cancel(String exp): deletes the given experiment from the database ***no way to restore, would need to reinput all info***
    -Main(): just for testing
-   
+
 */
-   
+
 
 public class CAMPRDatabase{
 
@@ -147,7 +147,7 @@ public class CAMPRDatabase{
                                  cage.getCage().getName() + "', '" +
                                  cage.getMouse() + "', " +
                                  "'ONGOING')";
-               
+
                stmt.executeUpdate(sql);
                System.out.println(sql);
             }
@@ -194,7 +194,7 @@ public class CAMPRDatabase{
       return ret;
 
    }
-   
+
    //returns an arraylist of the avaliable cages
    public static ArrayList<Cage> findAvailable(){
       Connection conn = null;
@@ -291,7 +291,7 @@ public class CAMPRDatabase{
 
          conn = DriverManager.getConnection("jdbc:sqlite:CAMPR.db");
          stmt = conn.createStatement();
-         
+
          if (action.toUpperCase() == "ONGOING"){
             sql = "SELECT * FROM EXPERIMENT INNER JOIN CAGE " +
                      "ON EXPERIMENT.CAGE_NAME = CAGE.CAGE_NAME " +
@@ -306,12 +306,12 @@ public class CAMPRDatabase{
             sql = "SELECT * FROM EXPERIMENT INNER JOIN CAGE " +
                      "ON EXPERIMENT.CAGE_NAME = CAGE.CAGE_NAME;";
          }
-        
+
          ResultSet rs = stmt.executeQuery(sql);
          Experiment curExp;
-         
+
          if(rs.next()){
-         
+
             String expName = rs.getString("EXP_NAME");
             String researcher = rs.getString("RESEARCHER");
             String startTime = rs.getString("START_TIME");
@@ -323,7 +323,7 @@ public class CAMPRDatabase{
             String mouse = rs.getString("MOUSE");
             curExp = new Experiment(researcher, expName, startTime, expDur, durOn, durOff);
             curExp.setCage(new MouseCage(new Cage(cage, ip), mouse));
-   
+
             rs.next();
             while(rs.next()){
                expName = rs.getString("EXP_NAME");
@@ -345,7 +345,7 @@ public class CAMPRDatabase{
                   curExp = new Experiment(researcher, expName, startTime, expDur, durOn, durOff);
                   curExp.setCage(new MouseCage(new Cage(cage, ip), mouse));
                }
-               
+
                ret.add(curExp);
                System.out.println("experiment: " + expName + ", cage: " + cage);
             }
@@ -363,7 +363,7 @@ public class CAMPRDatabase{
 
       return ret;
    }
-   
+
    //***PROBABLY DELETE***
    //change return when actually using
    public static void mouseSelect(){
@@ -395,19 +395,19 @@ public class CAMPRDatabase{
          System.err.println(e.getMessage());
       }
    }
-   
+
    //changes experiment status to 'COMPLETED'
    public static void statusUpdate(String exp){
       Connection conn = null;
       Statement stmt = null;
-      
+
       try{
-         conn = DriverManager.getConnection("jdbc:sqlite:CAMPR.db");         
+         conn = DriverManager.getConnection("jdbc:sqlite:CAMPR.db");
          stmt = conn.createStatement();
-         
+
          String sql = "UPDATE EXPERIMENT SET STATUS = 'COMPLETED' " +
                   "WHERE EXP_NAME = '" + exp + "';";
-         
+
          stmt.executeUpdate(sql);
          stmt.close();
          conn.close();
@@ -417,19 +417,20 @@ public class CAMPRDatabase{
          System.out.println(e.getMessage());
       }
    }
-   
+
    //deletes a canceled experiment
    public static void cancel(String exp){
+      System.out.println("Here"+exp);
       Connection conn = null;
       Statement stmt = null;
-      
+
       try{
-         conn = DriverManager.getConnection("jdbc:sqlite:CAMPR.db");         
+         conn = DriverManager.getConnection("jdbc:sqlite:CAMPR.db");
          stmt = conn.createStatement();
-         
+
          String sql = "DELETE FROM EXPERIMENT " +
                   "WHERE EXP_NAME = '" + exp + "';";
-         
+
          stmt.executeUpdate(sql);
          stmt.close();
          conn.close();
@@ -440,25 +441,25 @@ public class CAMPRDatabase{
       }
    }
 
-   
+
    /*public static Cage findCage(String cage, Connection conn, Statement stmt){
       Cage ret = new Cage();
       //Connection conn = null;
       //Statement stmt = null;
-      
+
       try{
-         conn = DriverManager.getConnection("jdbc:sqlite:CAMPR.db");         
+         conn = DriverManager.getConnection("jdbc:sqlite:CAMPR.db");
          stmt = conn.createStatement();
-      
+
          String sql = "SELECT * FROM CAGE " +
                   "WHERE CAGE_NAME = '" + cage + "';";
          ResultSet rs = stmt.executeQuery(sql);
-         
+
          String name = rs.getString("CAGE_NAME");
          String ip = rs.getString("IP");
-         
+
          ret = new Cage(name, ip);
-         
+
          rs.close();
          //stmt.close();
          //conn.close();
@@ -467,7 +468,7 @@ public class CAMPRDatabase{
          System.out.println("failed in findCage");
          System.out.println(e.getMessage());
       }
-      
+
       return ret;
    }*/
 
@@ -482,26 +483,26 @@ public class CAMPRDatabase{
       cageInput("cage1", "ip1");
       cageInput("cage2", "ip2");
       cageInput("cage3", "ip3");
-      
+
       System.out.println("cage select");
       cageSelect();
-      
+
       //cageSelect();
-      
+
       Experiment exp = new Experiment("Bryn", "exp1", "start1", "end1", "on1", "off1");
       exp.setCage(new MouseCage(new Cage("cage1", "ip1"), "mouse1"));
       expInput(exp);
-      
+
       exp = new Experiment("Nolan", "exp2", "start2", "end2", "on2", "off2");
       exp.setCage(new MouseCage(new Cage("cage2", "ip2"), "mouse2"));
       expInput(exp);
-      
+
       System.out.println("expSelect");
       ArrayList<Experiment> cur = experimentSelect("all");
-      
+
       for(int i = 0; i < cur.size(); i++){
          Experiment ex = cur.get(i);
-         
+
          String name = ex.getName();
          String researcher = ex.getResearcher();
          String start = ex.getStart();
@@ -509,25 +510,25 @@ public class CAMPRDatabase{
          String durOn = ex.getOnDurr();
          String durOff = ex.getOffDurr();
          ArrayList<MouseCage> cages = ex.getCages();
-         
+
          for(int j = 0; j < cages.size(); j++){
             System.out.println("researcher: " + researcher +
                                  " name: " + name +
                                  " start: " + start +
                                  " dur: " + expDur +
-                                 " onDur: " + durOn + 
+                                 " onDur: " + durOn +
                                  " offDur: " + durOff +
                                  " cage: " + cages.get(i).getCage().getName() +
                                  " mouse: " + cages.get(i).getMouse());
          }
       }
-      
+
       System.out.println("find avaliable");
       ArrayList<Cage> ava = findAvailable();
       for(int i = 0; i < ava.size(); i++){
          System.out.println("Cage: " + ava.get(i).getName() + " IP: " + ava.get(i).getIP());
       }
-      
+
       statusUpdate("exp1");
       //statusUpdate("exp2");
       System.out.println("find new avaliable");
@@ -536,7 +537,7 @@ public class CAMPRDatabase{
          System.out.println("Cage: " + nwava.get(i).getName() + " IP: " + nwava.get(i).getIP());
       }
 
-         
+
 
       System.out.println("there should be 3 sets of data from the database");
 

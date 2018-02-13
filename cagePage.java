@@ -112,7 +112,7 @@ public class cagePage extends Page {
          }
       }));
       exists = true;
-      ArrayList<Cage> savedCages = CAMPR.getAvail();
+      ArrayList<Cage> savedCages = CAMPR.getCages();
       int savedSize = savedCages.size();
       for(int i = 0; i < savedSize; i++){
          addCageButton(savedCages.get(i));
@@ -143,8 +143,7 @@ public class cagePage extends Page {
       submitB.watchName(p.newTextInput("Name of Cage: ", 150));
       submitB.watchIP(p.newTextInput("IP Address of Cage: ", 150));
       p.add(new Button(540, 30, 40, 175, "Submit", submitB));
-      p.add(new Button(540, 80, 40, 175, "Get Notes"));
-      p.add(new Button(540, 130, 40, 175, "Cancel", new MouseAdapter() {
+      p.add(new Button(540, 80, 40, 175, "Cancel", new MouseAdapter() {
          public void mouseClicked(MouseEvent e) {
             p.resetCurPos();
             p.close();

@@ -19,6 +19,7 @@ public class Cage {
       lightOffTime = lightOff;
    }*/
    public Cage(String cage, String pi){
+      /*TODO add connection stuff */
       cageID = cage;
       p = pi;
    }
