@@ -292,13 +292,15 @@ public class CAMPRDatabase{
          conn = DriverManager.getConnection("jdbc:sqlite:CAMPR.db");
          stmt = conn.createStatement();
 
-         if (action.toUpperCase() == "ONGOING"){
+         if (action.toUpperCase().equals("ONGOING")){
+            System.out.println("fidgetspinnersrdope");
             sql = "SELECT * FROM EXPERIMENT INNER JOIN CAGE " +
                      "ON EXPERIMENT.CAGE_NAME = CAGE.CAGE_NAME " +
                      "WHERE STATUS = 'ONGOING';";
          }
-         else if (action.toUpperCase() == "COMPLETED"){
-            sql = "SELECT * FROM EXPERIMENT INNER JOIN CAGE" +
+         else if (action.toUpperCase().equals("COMPLETED")){
+            System.out.println("HEEEEEEEEEEEEEEEEEEEEEEEEEEERRRRRRRRRRRRRRRRRRRRRRRRRRRRRRREEEEEEEEEEEEEEEEEEEEEEEEE");
+            sql = "SELECT * FROM EXPERIMENT INNER JOIN CAGE " +
                      "ON EXPERIMENT.CAGE_NAME = CAGE.CAGE_NAME " +
                      "WHERE STATUS = 'COMPLETED';";
          }
@@ -311,7 +313,7 @@ public class CAMPRDatabase{
          Experiment curExp;
 
          if(rs.next()){
-
+            System.out.println("1");
             String expName = rs.getString("EXP_NAME");
             String researcher = rs.getString("RESEARCHER");
             String startTime = rs.getString("START_TIME");
@@ -324,7 +326,8 @@ public class CAMPRDatabase{
             curExp = new Experiment(researcher, expName, startTime, expDur, durOn, durOff);
             curExp.setCage(new MouseCage(new Cage(cage, ip), mouse));
 
-            rs.next();
+            //rs.next(); //////// ! i think one entry in gets skipped here!
+            System.out.println("2");
             while(rs.next()){
                expName = rs.getString("EXP_NAME");
                researcher = rs.getString("RESEARCHER");
@@ -337,18 +340,20 @@ public class CAMPRDatabase{
                mouse = rs.getString("MOUSE");
                //curExp = new Experiment(researcher, expName, startTime, expDur, durOn, durOff);
                //curExp.setFakeCage(cage);
-               if(expName == curExp.getName()){
+               if(expName.equals(curExp.getName())){
                   curExp.setCage(new MouseCage(new Cage(cage, ip), mouse));
                }
                else{
+
+                  //NOLAN NOTE: what about entries for the same exp that appear non-consecutively in rs?
                   ret.add(curExp);
                   curExp = new Experiment(researcher, expName, startTime, expDur, durOn, durOff);
                   curExp.setCage(new MouseCage(new Cage(cage, ip), mouse));
                }
 
-               ret.add(curExp);
-               System.out.println("experiment: " + expName + ", cage: " + cage);
+               //System.out.println("experiment: " + expName + ", cage: " + cage);
             }
+            ret.add(curExp);
             rs.close();
             stmt.close();
             conn.close();
@@ -518,8 +523,8 @@ public class CAMPRDatabase{
                                  " dur: " + expDur +
                                  " onDur: " + durOn +
                                  " offDur: " + durOff +
-                                 " cage: " + cages.get(i).getCage().getName() +
-                                 " mouse: " + cages.get(i).getMouse());
+                                 " cage: " + cages.get(j).getCage().getName() +
+                                 " mouse: " + cages.get(j).getMouse());
          }
       }
 

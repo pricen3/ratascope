@@ -24,7 +24,9 @@ public class CAMPR {
          ongoing = CAMPRDatabase.experimentSelect("ongoing");
          complete = CAMPRDatabase.experimentSelect("completed");
 
-         ArrayList<Experiment> cur = CAMPRDatabase.experimentSelect("completed");
+         ArrayList<Experiment> cur = new ArrayList<Experiment>();
+         cur.clear();
+         cur = CAMPRDatabase.experimentSelect("all");
 
          for(int i = 0; i < cur.size(); i++){
             Experiment ex = cur.get(i);
@@ -38,7 +40,7 @@ public class CAMPR {
             ArrayList<MouseCage> cages = ex.getCages();
 
             for(int j = 0; j < cages.size(); j++){
-               System.out.println("researcher: " + researcher +
+               System.out.println("hellohellohellohellohellohellohellohelloresearcher: " + researcher +
                                     " name: " + name +
                                     " start: " + start +
                                     " dur: " + expDur +

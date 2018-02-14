@@ -79,11 +79,13 @@ public class expPage extends Page {
          String resName = rName.getText();
 
          /* get time input information */
+         JTextField dateBox = textInputs.get(2);
+         String date = dateBox.getText();
          String start = (String)startTime.getSelectedItem();
          String sAP = (String)startAOrP.getSelectedItem();
          String end = durration.getText();
 
-         Experiment ex = new Experiment(resName, expName, start+" "+sAP,end);
+         Experiment ex = new Experiment(resName, expName, start+sAP+date,end);
 
          /* get cage and mouse ID input information */
          Cage cage = new Cage();
@@ -152,6 +154,39 @@ public class expPage extends Page {
                arrayPos++;
             }
          }
+
+         /* test for appropriate date */
+         JTextField dateBox = textInputs.get(2);
+         String date = dateBox.getText();
+         char[] datArray = date.toCharArray();
+         if(datArray.length!=10){
+            p.errorMessHelper("Invalid date input", 600);
+            return false;
+         }
+         if(datArray[2]!=datArray[5] || datArray[2]!='/'){
+            p.errorMessHelper("Invalid date input", 600);
+            return false;
+         }
+         try{
+            int dInt;
+            dInt = Integer.parseInt(datArray[0]+""+datArray[1]);
+            if(dInt>12 || dInt<=0){
+               p.errorMessHelper("Invalid date input", 600);
+               return false;
+            }
+            dInt = Integer.parseInt(datArray[3]+""+datArray[4]);
+            if(dInt>31 || dInt<=0){/////////////////////////////////////////////TODO:more needed for month dependent
+               p.errorMessHelper("Invalid date input", 600);
+               return false;
+            }
+            Integer.parseInt(datArray[6]+""+datArray[7]+""+datArray[8]+""+datArray[9]);
+         }catch (Exception ex){
+            p.errorMessHelper("Invalid date input", 600);
+            return false;
+         }
+
+
+
          /* test for at least one valid cage */
          if(test.equals("")){
             p.errorMessHelper("At least one valid cage required.", 600);
@@ -278,7 +313,8 @@ public class expPage extends Page {
       submitB.watch(resName);
 
       newTimeDropDown("Select a start time*:\t", p, submitB);
-      p.descHelper("*the experiment will begin at this time within 24 hours.");
+      submitB.watch(p.newTextInput("Start date (mm/dd/yyyy):", 100));
+      //p.descHelper("*the experiment will begin at this time within 24 hours.");
       submitB.watchEnd(p.newTextInput("Enter a durration (hours):\t", 50));
       int position = p.getCurPos();
       p.setCurPos(position);
