@@ -191,7 +191,7 @@ public class Page {
    public JTextField newTextInput(String desc, int len){
       int position =  getCurPos();
       JLabel sd = new JLabel(desc);
-      sd.setBounds(28, position,200,20);
+      sd.setBounds(28, position,290,20);
       sd.setVisible(true);
       this.add(sd);
       JTextField tb = new JTextField();

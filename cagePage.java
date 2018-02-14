@@ -40,11 +40,16 @@ public class cagePage extends Page {
          cagePage cP = cagePage.getCagePage();
          String cName = name.getText();
          String ipAdd = ip.getText();
+
+         /* check for missing or invalid inputs */
          if(cName.equals("")){
             p.errorMessHelper("Name field required.");
          }else if(ipAdd.equals("")){
             p.errorMessHelper("IP Address field required.");
+         }else if(!isValidIP(ipAdd)){
+            return;
          }else{
+            /* no missing or invalid inputs */
             /* check for duplicates */
             ArrayList<Cage> avail = CAMPR.getAvail();
             ArrayList<Cage> inUse = CAMPR.getInUse();
@@ -70,6 +75,32 @@ public class cagePage extends Page {
             p.close();
             cP.resetCurPos();
          }
+      }
+      /* Check that IP address is valid */
+      private boolean isValidIP(String inputIP){
+         char[] ip = inputIP.toCharArray();
+         if(ip.length!=15){
+            p.errorMessHelper("Invalid IP, must be in form xxx.xxx.xxx.xxx");
+            return false;
+         }
+         if(ip[3]!=ip[7] || ip[3]!='.'){
+            p.errorMessHelper("Invalid IP, must be in form xxx.xxx.xxx.xxx");
+            return false;
+         }
+         try{
+            int ipInt;
+            for(int i = 0; i < 15; i += 4){
+               ipInt = Integer.parseInt(ip[i]+""+ip[i+1]+""+ip[i+2]);
+               if(ipInt>255 || ipInt<=0){
+                  p.errorMessHelper("Invalid IP");
+                  return false;
+               }
+            }
+         }catch (Exception ex){
+            p.errorMessHelper("Invalid IP, must be in form xxx.xxx.xxx.xxx");
+            return false;
+         }
+         return true;
       }
       private int max(int x, int y){
          if(x > y){
@@ -141,7 +172,7 @@ public class cagePage extends Page {
       submitB.setPage(p);
 
       submitB.watchName(p.newTextInput("Name of Cage: ", 150));
-      submitB.watchIP(p.newTextInput("IP Address of Cage: ", 150));
+      submitB.watchIP(p.newTextInput("IP Address of Cage (xxx.xxx.xxx.xxx): ", 150));
       p.add(new Button(540, 30, 40, 175, "Submit", submitB));
       p.add(new Button(540, 80, 40, 175, "Cancel", new MouseAdapter() {
          public void mouseClicked(MouseEvent e) {
@@ -188,8 +219,7 @@ public class cagePage extends Page {
          public void mouseClicked(MouseEvent e) {
             //Delete Cage from database
             /* confirm cage is not in use */
-            ArrayList<Cage> inUse = CAMPR.getInUse();
-            if(inUse.contains(c)){
+            if(!CAMPR.deleteCage(c)){
                displayPage.errorMessHelper("Cage can not be deleted until it is no longer in use");
                return;
             }

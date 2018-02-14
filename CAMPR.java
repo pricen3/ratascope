@@ -19,6 +19,8 @@ public class CAMPR {
       try{
          //TODO access database to produce lists of experiments//cages
          /* populate ArrayLists */
+         available.clear();
+         inUse.clear();
          available = CAMPRDatabase.findAvailable();
          inUse = CAMPRDatabase.findUnavailable();
          ongoing = CAMPRDatabase.experimentSelect("ongoing");
@@ -110,7 +112,6 @@ public class CAMPR {
       available.add(c);
    }
    public static void useCage(Cage c){
-      //TODO add some sort of database calls such that these functions are reflected in the database
       inUse.add(c);
       available.remove(c);
    }
@@ -118,9 +119,26 @@ public class CAMPR {
       available.add(c);
       inUse.remove(c);
    }
-   public static void deleteCage(Cage c){
+   public static boolean deleteCage(Cage c){
       //TODO remove from database
-      available.remove(c);
+      /* check if cage is in use */
+      int uSize = inUse.size();
+      String cName = c.getName();
+      for(int i = 0; i < uSize; i++){
+         if(cName.equals(inUse.get(i).getName())){
+            return false;
+         }
+      }
+      int aSize = available.size();
+      for(int i = 0; i < aSize; i++){
+         if(cName.equals(available.get(i).getName())){
+            available.remove(i);
+            break;
+         }
+      }
+      CAMPRDatabase.delete(c.getName());
+      return true;
+
    }
 
    /* returns completed experiment with given unique name */

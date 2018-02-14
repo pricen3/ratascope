@@ -55,7 +55,8 @@ public class CAMPRDatabase{
          if (table == "CAGE"){
             sql = "CREATE TABLE IF NOT EXISTS CAGE " +
                      "(CAGE_NAME  TEXT     NOT NULL UNIQUE, " +
-                      "IP         TEXT     NOT NULL UNIQUE)";
+                      "IP         TEXT     NOT NULL UNIQUE, "+
+                      "DELETED         TEXT     NOT NULL)";;
          }
          else if (table == "EXPERIMENT"){
             sql = "CREATE TABLE IF NOT EXISTS EXPERIMENT " +
@@ -99,8 +100,8 @@ public class CAMPRDatabase{
 
          conn = DriverManager.getConnection("jdbc:sqlite:CAMPR.db");
          stmt = conn.createStatement();
-         String sql = "INSERT INTO CAGE (CAGE_NAME, IP) " +
-                        "VALUES('" + name + "', '" + ip + "')";
+         String sql = "INSERT INTO CAGE (CAGE_NAME, IP, DELETED) " +
+                        "VALUES('" + name + "', '" + ip + "', '" + "FALSE" + "')";
 
          stmt.executeUpdate(sql);
          System.out.println(sql);
@@ -172,7 +173,7 @@ public class CAMPRDatabase{
 
          conn = DriverManager.getConnection("jdbc:sqlite:CAMPR.db");
          stmt = conn.createStatement();
-         ResultSet rs = stmt.executeQuery("SELECT * FROM CAGE");
+         ResultSet rs = stmt.executeQuery("SELECT * FROM CAGE WHERE DELETED = 'FALSE'");
 
          while(rs.next()){
             String name = rs.getString("CAGE_NAME");
@@ -209,10 +210,10 @@ public class CAMPRDatabase{
          stmt = conn.createStatement();
          ResultSet rs = stmt.executeQuery("SELECT DISTINCT CAGE_NAME, IP " +
                                              "FROM CAGE " +
-                                             "WHERE CAGE_NAME NOT IN " +
+                                             "WHERE DELETED = 'FALSE' AND CAGE_NAME NOT IN " +
                                                 "(SELECT CAGE_NAME " +
                                                 " FROM EXPERIMENT " +
-                                                " WHERE STATUS = 'ONGOING')");
+                                                " WHERE STATUS = 'ONGOING');");
          System.out.println("avaliable cages");
          while(rs.next()){
             String name = rs.getString("CAGE_NAME");
@@ -249,10 +250,10 @@ public class CAMPRDatabase{
          stmt = conn.createStatement();
          ResultSet rs = stmt.executeQuery("SELECT DISTINCT CAGE_NAME, IP " +
                                              "FROM CAGE " +
-                                             "WHERE CAGE_NAME IN " +
+                                             "WHERE DELETED = 'FALSE' AND CAGE_NAME IN " +
                                                 "(SELECT CAGE_NAME " +
                                                 " FROM EXPERIMENT " +
-                                                " WHERE STATUS = 'ONGOING')");
+                                                " WHERE STATUS = 'ONGOING');");
          System.out.println("unavaliable cages");
          while(rs.next()){
             String name = rs.getString("CAGE_NAME");
@@ -299,7 +300,6 @@ public class CAMPRDatabase{
                      "WHERE STATUS = 'ONGOING';";
          }
          else if (action.toUpperCase().equals("COMPLETED")){
-            System.out.println("HEEEEEEEEEEEEEEEEEEEEEEEEEEERRRRRRRRRRRRRRRRRRRRRRRRRRRRRRREEEEEEEEEEEEEEEEEEEEEEEEE");
             sql = "SELECT * FROM EXPERIMENT INNER JOIN CAGE " +
                      "ON EXPERIMENT.CAGE_NAME = CAGE.CAGE_NAME " +
                      "WHERE STATUS = 'COMPLETED';";
@@ -435,6 +435,28 @@ public class CAMPRDatabase{
 
          String sql = "DELETE FROM EXPERIMENT " +
                   "WHERE EXP_NAME = '" + exp + "';";
+
+         stmt.executeUpdate(sql);
+         stmt.close();
+         conn.close();
+      }
+      catch (Exception e){
+         System.out.println("failed in cancel");
+         System.out.println(e.getMessage());
+      }
+   }
+   //deletes a canceled experiment
+   public static void delete(String cage){
+      System.out.println("Here"+cage);
+      Connection conn = null;
+      Statement stmt = null;
+
+      try{
+         conn = DriverManager.getConnection("jdbc:sqlite:CAMPR.db");
+         stmt = conn.createStatement();
+
+         String sql = "UPDATE CAGE SET DELETED = 'TRUE' " +
+                  "WHERE CAGE_NAME = '" + cage + "';";
 
          stmt.executeUpdate(sql);
          stmt.close();
