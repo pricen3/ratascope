@@ -180,6 +180,7 @@ public class expPage extends Page {
             if(yInt < 2018){
                /* Need a time machine */
                p.errorMessHelper("Invalid year input. Time machine required to access specified year.", 600);
+               return false;
             }
             if(mInt == 2){
                if(yInt % 4 != 0){
@@ -193,7 +194,7 @@ public class expPage extends Page {
             /* Day */
             dInt = Integer.parseInt(datArray[3]+""+datArray[4]);
 
-            if(dInt>(31-subDays) || dInt<=0){/////////////////////////////////////////////TODO:more needed for month dependent
+            if(dInt>(31-subDays) || dInt<=0){
                p.errorMessHelper("Invalid day input", 600);
                return false;
             }
@@ -281,7 +282,6 @@ public class expPage extends Page {
       add(new Button(28, 30, 40, 150, "New Experiment", new MouseAdapter() {
          public void mouseClicked(MouseEvent e) {
             if(newButtonY > 850){
-               //TODO: this needs testing
                if(newButtonX + 160 > 400){
                   errorMessHelper("Max ongoing capacity. Experiments must end before new ones may be added.", 870);
                   return;
@@ -565,7 +565,7 @@ public class expPage extends Page {
             cageString += ", "+cur.getName()+" ("+curMC.getMouse()+")";
          }else{
             /* edge case */
-            cageString += cur.getName();
+            cageString += cur.getName()+" ("+curMC.getMouse()+")";
          }
       }
       /* write list of on and off times */

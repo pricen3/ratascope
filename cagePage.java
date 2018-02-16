@@ -139,6 +139,13 @@ public class cagePage extends Page {
       newButtonX = 28;
       add(new Button(28, 30, 40, 150, "New Cage", new MouseAdapter() {
          public void mouseClicked(MouseEvent e) {
+            if(newButtonY > 850){
+               //TODO: this needs testing
+               if(newButtonX + 160 > 400){
+                  errorMessHelper("Max capacity. Cages must be deleted before new ones may be added.", 870);
+                  return;
+               }
+            }
             newCagePageCreate();
          }
       }));

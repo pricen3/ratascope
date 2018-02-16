@@ -54,8 +54,8 @@ public class CAMPRDatabase{
          stmt = conn.createStatement();
          if (table == "CAGE"){
             sql = "CREATE TABLE IF NOT EXISTS CAGE " +
-                     "(CAGE_NAME  TEXT     NOT NULL UNIQUE, " +
-                      "IP         TEXT     NOT NULL UNIQUE, "+
+                     "(CAGE_NAME  TEXT     NOT NULL, " +
+                      "IP         TEXT     NOT NULL, "+
                       "DELETED         TEXT     NOT NULL)";;
          }
          else if (table == "EXPERIMENT"){
@@ -297,16 +297,16 @@ public class CAMPRDatabase{
             System.out.println("fidgetspinnersrdope");
             sql = "SELECT * FROM EXPERIMENT INNER JOIN CAGE " +
                      "ON EXPERIMENT.CAGE_NAME = CAGE.CAGE_NAME " +
-                     "WHERE STATUS = 'ONGOING';";
+                     "WHERE STATUS = 'ONGOING' ORDER BY EXP_NAME ASC;";
          }
          else if (action.toUpperCase().equals("COMPLETED")){
             sql = "SELECT * FROM EXPERIMENT INNER JOIN CAGE " +
                      "ON EXPERIMENT.CAGE_NAME = CAGE.CAGE_NAME " +
-                     "WHERE STATUS = 'COMPLETED';";
+                     "WHERE STATUS = 'COMPLETED' ORDER BY EXP_NAME ASC;";
          }
          else{
             sql = "SELECT * FROM EXPERIMENT INNER JOIN CAGE " +
-                     "ON EXPERIMENT.CAGE_NAME = CAGE.CAGE_NAME;";
+                     "ON EXPERIMENT.CAGE_NAME = CAGE.CAGE_NAME ORDER BY EXP_NAME ASC;";
          }
 
          ResultSet rs = stmt.executeQuery(sql);
@@ -510,6 +510,51 @@ public class CAMPRDatabase{
       cageInput("cage1", "ip1");
       cageInput("cage2", "ip2");
       cageInput("cage3", "ip3");
+      /*cageInput("cage4", "ip4");
+      cageInput("cage5", "ip5");
+      cageInput("cage6", "ip6");
+      cageInput("cage7", "ip7");
+      cageInput("cage8", "ip8");
+      cageInput("cage9", "ip9");
+      cageInput("cage10", "ip10");
+      cageInput("cage11", "ip11");
+      cageInput("cage12", "ip12");
+      cageInput("cage13", "ip13");
+      cageInput("cage14", "ip14");
+      cageInput("cage15", "ip15");
+      cageInput("cage16", "ip16");
+      cageInput("cage17", "ip17");
+      cageInput("cage18", "ip18");
+      cageInput("cage19", "ip19");
+      cageInput("cage20", "ip20");
+      cageInput("cage21", "ip21");
+      cageInput("cage22", "ip22");
+      cageInput("cage23", "ip23");
+      cageInput("cage24", "ip24");
+      cageInput("cage25", "ip25");
+      cageInput("cage26", "ip26");
+      cageInput("cage27", "ip27");
+      cageInput("cage28", "ip28");
+      cageInput("cage29", "ip29");
+      cageInput("cage30", "ip30");
+      cageInput("cage31", "ip31");
+      cageInput("cage32", "ip32");
+      cageInput("cage33", "ip33");
+      cageInput("cage34", "ip34");
+      cageInput("cage35", "ip35");
+      cageInput("cage36", "ip36");
+      cageInput("cage37", "ip37");
+      cageInput("cage38", "ip38");
+      cageInput("cage39", "ip39");
+      cageInput("cage40", "ip40");
+      cageInput("cage41", "ip41");
+      cageInput("cage42", "ip42");
+      cageInput("cage43", "ip43");
+      cageInput("cage44", "ip44");
+      cageInput("cage45", "ip45");
+      cageInput("cage46", "ip46");
+      cageInput("cage47", "ip47");
+      cageInput("cage48", "ip48");*/
 
       System.out.println("cage select");
       cageSelect();
@@ -524,6 +569,12 @@ public class CAMPRDatabase{
       exp.setCage(new MouseCage(new Cage("cage2", "ip2"), "mouse2"));
       exp.setCage(new MouseCage(new Cage("cage3", "ip3"), "mouse3"));
       expInput(exp);
+
+      /*for(int i = 3; i < 49; i++){
+         exp = new Experiment("Nolan", "exp"+i, "start2", "end2", "on2", "off2");
+         exp.setCage(new MouseCage(new Cage("cage"+i, "ip"+i), "mouse2"));
+         expInput(exp);
+      }*/
 
       System.out.println("expSelect");
       ArrayList<Experiment> cur = experimentSelect("all");

@@ -24,7 +24,10 @@ public class CAMPR {
          inUse = CAMPRDatabase.findUnavailable();
          ongoing = CAMPRDatabase.experimentSelect("ongoing");
          complete = CAMPRDatabase.experimentSelect("completed");
-
+         for(int i = 4; i < 50; i++){
+            System.out.println("cageInput(\"cage"+i+"\", \"ip"+i+"\");");
+         }
+         //TODO fix problem with exp display page cage section
 
          /* For Testing */
          ArrayList<Experiment> cur = new ArrayList<Experiment>();
