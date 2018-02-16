@@ -168,18 +168,35 @@ public class expPage extends Page {
             return false;
          }
          try{
-            int dInt;
-            dInt = Integer.parseInt(datArray[0]+""+datArray[1]);
-            if(dInt>12 || dInt<=0){
-               p.errorMessHelper("Invalid date input", 600);
+            int dInt, mInt, yInt, subDays = 0;
+            /* Month */
+            mInt = Integer.parseInt(datArray[0]+""+datArray[1]);
+            if(mInt>12 || mInt<=0){
+               p.errorMessHelper("Invalid month input", 600);
                return false;
             }
+            /* Year */
+            yInt = Integer.parseInt(datArray[6]+""+datArray[7]+""+datArray[8]+""+datArray[9]);
+            if(yInt < 2018){
+               /* Need a time machine */
+               p.errorMessHelper("Invalid year input. Time machine required to access specified year.", 600);
+            }
+            if(mInt == 2){
+               if(yInt % 4 != 0){
+                  /* Leap Year */
+                  subDays ++;
+               }
+               subDays += 2;
+            }else if(mInt == 4 || mInt == 6 || mInt == 9 || mInt == 11){
+               subDays ++;
+            }
+            /* Day */
             dInt = Integer.parseInt(datArray[3]+""+datArray[4]);
-            if(dInt>31 || dInt<=0){/////////////////////////////////////////////TODO:more needed for month dependent
-               p.errorMessHelper("Invalid date input", 600);
+
+            if(dInt>(31-subDays) || dInt<=0){/////////////////////////////////////////////TODO:more needed for month dependent
+               p.errorMessHelper("Invalid day input", 600);
                return false;
             }
-            Integer.parseInt(datArray[6]+""+datArray[7]+""+datArray[8]+""+datArray[9]);
          }catch (Exception ex){
             p.errorMessHelper("Invalid date input", 600);
             return false;
@@ -507,13 +524,14 @@ public class expPage extends Page {
       /* Add Cancelation button */
       displayPage.add(new Button(540, 30, 40, 175, "Cancel Experiment", new MouseAdapter() {
          public void mouseClicked(MouseEvent e) {
+            /* Delete experiment from database */
             exp.cancelExperiment();
+            /* Remove associated button on experiments page */
             displayPage.resetCurPos();
             displayPage.close();
             expBut.remove();
             expButtons.remove(expBut);
             refreash();
-            // TODO delete canceled experiment from database
          }
       }));
    }

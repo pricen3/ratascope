@@ -17,7 +17,6 @@ public class CAMPR {
 
    public static void main(String[] args) throws Exception{
       try{
-         //TODO access database to produce lists of experiments//cages
          /* populate ArrayLists */
          available.clear();
          inUse.clear();
@@ -26,9 +25,11 @@ public class CAMPR {
          ongoing = CAMPRDatabase.experimentSelect("ongoing");
          complete = CAMPRDatabase.experimentSelect("completed");
 
+
+         /* For Testing */
          ArrayList<Experiment> cur = new ArrayList<Experiment>();
          cur.clear();
-         cur = CAMPRDatabase.experimentSelect("all");
+         cur = CAMPRDatabase.experimentSelect("ongoing");
 
          for(int i = 0; i < cur.size(); i++){
             Experiment ex = cur.get(i);
@@ -52,7 +53,6 @@ public class CAMPR {
                                     " mouse: " + cages.get(j).getMouse());
             }
          }
-         System.out.println("HERE");
 
          generateMainPage();
       }catch(Exception ex){
@@ -120,7 +120,6 @@ public class CAMPR {
       inUse.remove(c);
    }
    public static boolean deleteCage(Cage c){
-      //TODO remove from database
       /* check if cage is in use */
       int uSize = inUse.size();
       String cName = c.getName();

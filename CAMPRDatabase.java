@@ -522,6 +522,7 @@ public class CAMPRDatabase{
 
       exp = new Experiment("Nolan", "exp2", "start2", "end2", "on2", "off2");
       exp.setCage(new MouseCage(new Cage("cage2", "ip2"), "mouse2"));
+      exp.setCage(new MouseCage(new Cage("cage3", "ip3"), "mouse3"));
       expInput(exp);
 
       System.out.println("expSelect");

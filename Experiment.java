@@ -88,8 +88,7 @@ public class Experiment{
    }
 
    public void cancelExperiment(){
-      //TODO: figure this snot out
-      //send cancel script to pis
+      //TODO: send cancel script to pis
       int numCages = cages.size();
       MouseCage m;
       for(int i = 0; i < numCages; i++){
