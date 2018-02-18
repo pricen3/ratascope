@@ -4,6 +4,7 @@
 
 import java.util.*;
 import java.time.*;
+import java.lang.Runtime;
 
 public class Experiment{
    private ArrayList<MouseCage> cages;
@@ -38,17 +39,31 @@ public class Experiment{
 
    public void run(){
    /* TODO: add stuff to make the experiment run*/
-   //send script to pi
+      System.out.println("IAMHERE");
+      try{
+         MouseCage cur;
+         Cage c;
+         String ip, runString, stringRun;
+         for(int i = 0; i < cages.size(); i++){
+            System.out.println("1");
+            cur = cages.get(i);
+            c = cur.getCage();
+            ip = c.getIP();
+            runString = getRunString(cur);
+            stringRun = "python client.py -ip "+ip+" -s \""+runString+"\"";
+            System.out.println(stringRun);
+            Process pr = Runtime.getRuntime().exec(new String[] {"bash", "-c" ,stringRun});
+            System.out.println("2");
+         }
+      }catch(Exception ex){
+         System.out.println("*shrug*");
+         ex.printStackTrace();
+      }
    }
 
-   //public File aquireData(){
-      /*aquire some sort of file?*/
-      //return file;
-   //}
-
-   //public void setDuration(time t){
-      //duration = t;
-   //}
+   private String getRunString(MouseCage cur){
+      return startTime+" "+cur.getMouse()+" "+expDurr+" "+onDurr+" "+offDurr;
+   }
 
    public void finishExperiment(){
    /*not sure how this is different from cancel*/

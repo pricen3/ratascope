@@ -10,8 +10,6 @@ import java.util.ArrayList;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-//TODO refreash buttons on both this and exp page
-
 public class cagePage extends Page {
 
    private static class CloseReset extends WindowAdapter {
@@ -140,7 +138,6 @@ public class cagePage extends Page {
       add(new Button(28, 30, 40, 150, "New Cage", new MouseAdapter() {
          public void mouseClicked(MouseEvent e) {
             if(newButtonY > 850){
-               //TODO: this needs testing
                if(newButtonX + 160 > 400){
                   errorMessHelper("Max capacity. Cages must be deleted before new ones may be added.", 870);
                   return;
@@ -224,7 +221,6 @@ public class cagePage extends Page {
       // TODO add cancelation logic and background
       displayPage.add(new Button(540, 30, 40, 175, "Delete Cage", new MouseAdapter() {
          public void mouseClicked(MouseEvent e) {
-            //Delete Cage from database
             /* confirm cage is not in use */
             if(!CAMPR.deleteCage(c)){
                displayPage.errorMessHelper("Cage can not be deleted until it is no longer in use");

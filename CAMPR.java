@@ -27,7 +27,6 @@ public class CAMPR {
          for(int i = 4; i < 50; i++){
             System.out.println("cageInput(\"cage"+i+"\", \"ip"+i+"\");");
          }
-         //TODO fix problem with exp display page cage section
 
          /* For Testing */
          ArrayList<Experiment> cur = new ArrayList<Experiment>();

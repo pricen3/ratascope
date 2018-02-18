@@ -78,14 +78,19 @@ public class expPage extends Page {
          rName = textInputs.get(1);
          String resName = rName.getText();
 
-         /* get time input information */
+         /* get and process date input information */
          JTextField dateBox = textInputs.get(2);
          String date = dateBox.getText();
+         char[] datArray = date.toCharArray();
+         /*MM/DD/YYYY
+           0123456789*/
+         String dateProcessed = datArray[8]+""+datArray[9]+" "+datArray[0]+""+datArray[1]+" "+datArray[3]+""+datArray[4]; /*YY MM DD*/
+         /* get time input information */
          String start = (String)startTime.getSelectedItem();
          String sAP = (String)startAOrP.getSelectedItem();
          String end = durration.getText();
 
-         Experiment ex = new Experiment(resName, expName, start+sAP+date,end);
+         Experiment ex = new Experiment(resName, expName, start+sAP+" "+dateProcessed, end);
 
          /* get cage and mouse ID input information */
          Cage cage = new Cage();
@@ -114,6 +119,8 @@ public class expPage extends Page {
          expP.addExpButton(ex);
          p.close();
          expP.resetCurPos();////////////////////////
+         System.out.println("IAMHERE1111111111111111111111111111");
+         ex.run();
       }
 
       /* check for user input errors */
@@ -136,6 +143,10 @@ public class expPage extends Page {
             if(!t.equals("")){
                if(curID.equals("")){
                   p.errorMessHelper("Missing Field - Mouse ID.", 600);
+                  return false;
+               }
+               if(curID.contains(" ")){
+                  p.errorMessHelper("Mouse IDs may not contain spaces.", 600);
                   return false;
                }
                test = t;
@@ -202,8 +213,6 @@ public class expPage extends Page {
             p.errorMessHelper("Invalid date input", 600);
             return false;
          }
-
-
 
          /* test for at least one valid cage */
          if(test.equals("")){

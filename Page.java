@@ -117,7 +117,6 @@ public class Page {
       if (revealed){
          b.addToBackground(back);
       }
-      //TODO add reshaping function if to many buttons...
    }
    public void add(JLabel p){
       back.add(p, new Integer(5));
