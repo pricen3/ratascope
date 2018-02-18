@@ -5,6 +5,7 @@
 import java.util.*;
 import java.time.*;
 import java.lang.Runtime;
+import java.lang.Integer;
 
 public class Experiment{
    private ArrayList<MouseCage> cages;
@@ -62,7 +63,21 @@ public class Experiment{
    }
 
    private String getRunString(MouseCage cur){
-      return startTime+" "+cur.getMouse()+" "+expDurr+" "+onDurr+" "+offDurr;
+      /*process startTime */
+      char[] start = startTime.toCharArray();
+      int hr = Integer.parseInt(start[0]+""+start[1]);
+      int min = Integer.parseInt(start[3]+""+start[4]);
+      if(start[5]=='P'){
+         /* Convert to military time */
+         hr += 12;
+      }
+      if(start[5]=='A'){
+         /* Convert to military time */
+         if(hr==12){
+            hr=0;
+         }
+      }
+      return hr+" "+min+" "+cur.getMouse()+" "+expDurr+" "+onDurr+" "+offDurr;
    }
 
    public void finishExperiment(){

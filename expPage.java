@@ -119,7 +119,6 @@ public class expPage extends Page {
          expP.addExpButton(ex);
          p.close();
          expP.resetCurPos();////////////////////////
-         System.out.println("IAMHERE1111111111111111111111111111");
          ex.run();
       }
 
