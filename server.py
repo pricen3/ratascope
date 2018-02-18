@@ -1,5 +1,5 @@
-#!/usr/bin/python          
-import socket             
+#!/usr/bin/python
+import socket
 import argparse
 import struct
 import os
@@ -24,15 +24,15 @@ def recv(connection):
     except TimeoutError:
         print('timeoutError ocurred')
 
-def server(ip, word):
+def server(ip):
     """server function"""
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)       
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.bind((ip, 3679))
-    s.listen(5)                
+    s.listen(5)
     while True:
         c, addr = s.accept()
         ###message is what is being sent to the client. Change as needed###
-        message = 'Board : ' + board + '(' + str(guesses) + ' guesses left)'
+        message = 'such badass. such wow. good boy doin a compute'
         send(c, message)
         send(c, 'C')
         guess = recv(c)
@@ -40,3 +40,11 @@ def server(ip, word):
         c.close()
         exit()
     s.close()
+
+def main():
+    hostname = socket.gethostbyname(socket.gethostname())
+    print(hostname)
+    server(hostname)
+
+if __name__ == '__main__':
+    main()

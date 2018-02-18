@@ -1,5 +1,5 @@
-#!/usr/bin/python          
-import socket             
+#!/usr/bin/python
+import socket
 import argparse
 import struct
 import os
@@ -27,18 +27,17 @@ def recv(connection):
 
 def client(ip):
     """Client function"""
-    s = socket.socket()        
+    s = socket.socket()
     s.connect((ip, 3679))
     cont = 0
     while(cont == 0):
-        message = recv(s)
+        #message = recv(s)
         code = recv(s)
-        if code == 'L':
-            print('You lost')
-            cont = 1
-        elif code == 'W':
-            print('You won')
-            cont = 1
-        else:
-            send(s, guess)
-    s.close          
+        print(code)
+    s.close
+
+def main():
+    client('140.160.139.121')
+
+if __name__ == '__main__':
+    main()
