@@ -114,7 +114,6 @@ public class expPage extends Page {
          ex.addOnDurr((String)s);
          s = (String)offTimeInput.getSelectedItem();
          ex.addOffDurr((String)s);
-         System.out.println(resName);
          CAMPR.addExp(ex);
          expP.addExpButton(ex);
          p.close();

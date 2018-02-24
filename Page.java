@@ -91,7 +91,6 @@ public class Page {
       frame.setVisible(true);
       int numButtons = buttons.size();
       for (int i=0; i < numButtons; i++){
-         //System.out.println(buttons.get(i).getText());
          back.add(buttons.get(i), new Integer(5));
       }
       back.resetBack();
@@ -133,7 +132,6 @@ public class Page {
       try{
          back = new Background(img, 0, 0);
       }catch(Exception ex){
-         System.out.println("Error: non-existant background image.");
          ex.printStackTrace();
       }
    }
@@ -142,7 +140,6 @@ public class Page {
       try{
          back = new Background(img, x, y);
       }catch(Exception ex){
-         System.out.println("Error: non-existant background image.");
          ex.printStackTrace();
       }
    }
@@ -205,8 +202,8 @@ public class Page {
    /* Creates time menu drop down: if numberedTimes is false, menu only says AM and PM */
    public JComboBox<String> timeMenuHelper(int xpos, int ypos, boolean numberedTimes){
       String[] choices1 = {"AM", "PM"};
-      String[] choices2 = {"12:00", "12:30", "1:00", "1:30", "2:00", "2:30", "3:00", "3:30",
-         "4:00", "4:30", "5:00", "5:30", "6:00", "6:30", "7:00", "7:30", "8:00", "8:30", "9:00", "9:30",
+      String[] choices2 = {"12:00", "12:30", "01:00", "01:30", "02:00", "02:30", "03:00", "03:30",
+         "04:00", "04:30", "05:00", "05:30", "06:00", "06:30", "07:00", "07:30", "08:00", "08:30", "09:00", "09:30",
          "10:00", "10:30", "11:00", "11:30"};
       String[] choices = choices1;
       if(numberedTimes){

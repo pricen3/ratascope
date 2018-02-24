@@ -24,41 +24,8 @@ public class CAMPR {
          inUse = CAMPRDatabase.findUnavailable();
          ongoing = CAMPRDatabase.experimentSelect("ongoing");
          complete = CAMPRDatabase.experimentSelect("completed");
-         for(int i = 4; i < 50; i++){
-            System.out.println("cageInput(\"cage"+i+"\", \"ip"+i+"\");");
-         }
-
-         /* For Testing */
-         ArrayList<Experiment> cur = new ArrayList<Experiment>();
-         cur.clear();
-         cur = CAMPRDatabase.experimentSelect("ongoing");
-
-         for(int i = 0; i < cur.size(); i++){
-            Experiment ex = cur.get(i);
-
-            String name = ex.getName();
-            String researcher = ex.getResearcher();
-            String start = ex.getStart();
-            String expDur = ex.getExpDurr();
-            String durOn = ex.getOnDurr();
-            String durOff = ex.getOffDurr();
-            ArrayList<MouseCage> cages = ex.getCages();
-
-            for(int j = 0; j < cages.size(); j++){
-               System.out.println("hellohellohellohellohellohellohellohelloresearcher: " + researcher +
-                                    " name: " + name +
-                                    " start: " + start +
-                                    " dur: " + expDur +
-                                    " onDur: " + durOn +
-                                    " offDur: " + durOff +
-                                    " cage: " + cages.get(j).getCage().getName() +
-                                    " mouse: " + cages.get(j).getMouse());
-            }
-         }
-
          generateMainPage();
       }catch(Exception ex){
-         System.out.println("*shrug*");
          ex.printStackTrace();
       }
    }

@@ -49,7 +49,7 @@ def recv(connection):
 def client(ip, send_string):
     """Client function"""
     s = socket.socket()
-    s.connect((ip, 3456)) #3679
+    s.connect((ip, 3684)) #3679
     cont = 0
     while(cont == 0):
         #message = recv(s)

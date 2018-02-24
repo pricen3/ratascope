@@ -40,24 +40,19 @@ public class Experiment{
 
    public void run(){
    /* TODO: add stuff to make the experiment run*/
-      System.out.println("IAMHERE");
       try{
          MouseCage cur;
          Cage c;
          String ip, runString, stringRun;
          for(int i = 0; i < cages.size(); i++){
-            System.out.println("1");
             cur = cages.get(i);
             c = cur.getCage();
             ip = c.getIP();
             runString = getRunString(cur);
             stringRun = "python client.py -ip "+ip+" -s \""+runString+"\"";
-            System.out.println(stringRun);
             Process pr = Runtime.getRuntime().exec(new String[] {"bash", "-c" ,stringRun});
-            System.out.println("2");
          }
       }catch(Exception ex){
-         System.out.println("*shrug*");
          ex.printStackTrace();
       }
    }
@@ -67,17 +62,18 @@ public class Experiment{
       char[] start = startTime.toCharArray();
       int hr = Integer.parseInt(start[0]+""+start[1]);
       int min = Integer.parseInt(start[3]+""+start[4]);
+      /* Convert to military time */
       if(start[5]=='P'){
-         /* Convert to military time */
          hr += 12;
       }
       if(start[5]=='A'){
-         /* Convert to military time */
          if(hr==12){
             hr=0;
          }
       }
-      return hr+" "+min+" "+cur.getMouse()+" "+expDurr+" "+onDurr+" "+offDurr;
+      String date = start[7]+""+start[8]+""+start[9]+""+start[10]+""+start[11]+""+start[12]+""+start[13]+""+start[14]+""+start[15];
+      System.out.println(hr+" "+min+" "+date+" "+cur.getMouse()+" "+expDurr+" "+onDurr+" "+offDurr);
+      return hr+" "+min+date+" "+cur.getMouse()+" "+expDurr+" "+onDurr+" "+offDurr;
    }
 
    public void finishExperiment(){
@@ -88,7 +84,7 @@ public class Experiment{
       cages.add(c);
    }
    public void setFakeCage(String c){
-      /* For Debugging // Testing */
+      /* For Debugging and Testing */
       Cage fCage = new Cage(c, "0");
       MouseCage fake = new MouseCage(fCage, "not a real mouse");
       cages.add(fake);
@@ -121,8 +117,18 @@ public class Experiment{
       //TODO: send cancel script to pis
       int numCages = cages.size();
       MouseCage m;
+      Cage c;
+      String ip, cancelString;
       for(int i = 0; i < numCages; i++){
          m = cages.get(i);
+         c = m.getCage();
+         ip = c.getIP();
+         cancelString = "python client.py -ip "+ip+" -s cancel";
+         try{
+            Process pr = Runtime.getRuntime().exec(new String[] {"bash", "-c" ,cancelString});
+         }catch(Exception ex){
+            ex.printStackTrace();
+         }
          CAMPR.freeCage(m.getCage());
       }
       CAMPR.cancelExp(this);

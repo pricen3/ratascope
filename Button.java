@@ -66,7 +66,6 @@ class Button extends JPanel{
    }
 
    public int getX(){
-      System.out.println("retreive");
       return x;
    }
 

@@ -9,15 +9,6 @@ public class Cage {
    private String p; /* ip address of pi */
    private boolean expOngoing;
 
-   /*public Cage(String cage, Experiment exper, Mouse mouse, String pi, boolean going, int lightOn, int lightOff){
-      cageID = cage;
-      exp = exper;
-      inhabitant = mouse;
-      p = pi;
-      expOngoing = going;
-      lightOnTime = lightOn;
-      lightOffTime = lightOff;
-   }*/
    public Cage(String cage, String pi){
       /*TODO add connection stuff */
       cageID = cage;
