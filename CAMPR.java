@@ -4,8 +4,14 @@ import java.awt.Dimension;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
+import java.util.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 /* Command line: java -classpath ".:sqlite-jdbc-3.21.0.jar" CAMPR */
+//TODO: set exps to complete when curent time > start+dur
+//TODO: open completed exp CSV files
+//TODO: check for input decimal durration hours
 
 public class CAMPR {
 
@@ -16,6 +22,9 @@ public class CAMPR {
    private static ArrayList<Cage> inUse = new ArrayList<Cage>();
 
    public static void main(String[] args) throws Exception{
+      DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+      Date date = new Date(116, 14, 30, 1, 1);
+      System.out.println(dateFormat.format(date));
       try{
          /* populate ArrayLists */
          available.clear();
@@ -24,6 +33,7 @@ public class CAMPR {
          inUse = CAMPRDatabase.findUnavailable();
          ongoing = CAMPRDatabase.experimentSelect("ongoing");
          complete = CAMPRDatabase.experimentSelect("completed");
+         checkForCompletion();
          generateMainPage();
       }catch(Exception ex){
          ex.printStackTrace();
@@ -69,6 +79,8 @@ public class CAMPR {
       ongoing.add(e);
    }
    public static void completeExp(Experiment e){
+      System.out.println("updating "+e.getName()+" to completed.");
+      CAMPRDatabase.statusUpdate(e.getName());
       complete.add(e);
       ongoing.remove(e);
    }
@@ -107,6 +119,25 @@ public class CAMPR {
       CAMPRDatabase.delete(c.getName());
       return true;
 
+   }
+
+   /* Check if any experiments have timed out, then moves those experiments to completed */
+   public static void checkForCompletion(){
+      int size = ongoing.size();
+      Date currentDate = new Date(); /* gets current date to nearest milisecond */
+      ArrayList<Experiment> toBeMoved = new ArrayList<Experiment>();
+      Experiment cur;
+      for(int i = 0; i < size; i++){
+         cur = ongoing.get(i);
+         if(currentDate.after(cur.getEndDate())){
+            toBeMoved.add(cur);
+         }
+      }
+      size = toBeMoved.size();
+      for(int i = 0; i < size; i++){
+         cur = toBeMoved.get(i);
+         completeExp(cur);
+      }
    }
 
    /* returns completed experiment with given unique name */

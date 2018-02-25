@@ -49,7 +49,7 @@ def recv(connection):
 def client(ip, send_string):
     """Client function"""
     s = socket.socket()
-    s.connect((ip, 3684)) #3679
+    s.connect((ip, 3683)) #3679
     cont = 0
     while(cont == 0):
         #message = recv(s)
@@ -59,6 +59,7 @@ def client(ip, send_string):
         code = recv(s)
         if code == "Y":
             cont += 1
+            print("Y")
     s.close
 
 def main():

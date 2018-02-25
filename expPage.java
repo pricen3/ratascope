@@ -592,7 +592,7 @@ public class expPage extends Page {
       displayPage.descHelper("Experiment Durration: "+exp.getExpDurr()+" hours");
       displayPage.descHelper(onString);
       displayPage.descHelper(offString);
-      displayPage.resetCurPos(); //TODO do i need//want this?
+      displayPage.resetCurPos(); 
 
       return displayPage;
    }

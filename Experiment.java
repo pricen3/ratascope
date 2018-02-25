@@ -1,11 +1,13 @@
 
 /*I am still trying to figure out the time part
    and will have that part done monday. hopefully*/
+   //TODO add content to set experiment as complete
 
 import java.util.*;
 import java.time.*;
 import java.lang.Runtime;
 import java.lang.Integer;
+import java.util.Date;
 
 public class Experiment{
    private ArrayList<MouseCage> cages;
@@ -24,8 +26,6 @@ public class Experiment{
       name = mName;
       startTime = start;
       expDurr = end;
-      //onTimes = new ArrayList<String>();
-      //offTimes = new ArrayList<String>();
    }
 
    public Experiment(String research, String mName, String start, String end, String onD, String offD){
@@ -108,9 +108,34 @@ public class Experiment{
    public String getOffDurr(){
       return offDurr;
    }
-
    public ArrayList<MouseCage> getCages(){
       return cages;
+   }
+   public Date getEndDate(){
+      /*process startTime */
+      System.out.println(startTime);
+      char[] start = startTime.toCharArray();
+      try{
+         int hr = Integer.parseInt(start[0]+""+start[1]);
+         int min = Integer.parseInt(start[3]+""+start[4]);
+         /* Convert to military time */
+         if(start[5]=='P'){
+            hr += 12;
+         }
+         if(start[5]=='A'){
+            if(hr==12){
+               hr=0;
+            }
+         }
+         int year = 100 + Integer.parseInt(start[8]+""+start[9]); /* current year - 1900 */
+         int month = Integer.parseInt(start[11]+""+start[12]) - 1; /* subtract one for compatibility with Date class */
+         int day = Integer.parseInt(start[14]+""+start[15]);
+         int dur = Integer.parseInt(expDurr) + hr;
+         return new Date(year, month, day, dur, min);
+      }catch(Exception ex){
+         /* Shouldn't be here */
+      }
+      return new Date();
    }
 
    public void cancelExperiment(){

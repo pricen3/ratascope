@@ -68,6 +68,10 @@ public class cagePage extends Page {
                }
             }
             Cage c = new Cage(cName, ipAdd);
+            if(!c.testIP()){
+               p.errorMessHelper("Unable to conect to specified IP");
+               return;
+            }
             CAMPR.addCage(c);
             cP.addCageButton(c);
             p.close();

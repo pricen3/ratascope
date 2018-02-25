@@ -510,17 +510,18 @@ public class CAMPRDatabase{
       cageInput("cage1", "ip1");
       cageInput("cage2", "ip2");
       cageInput("cage3", "ip3");
+      cageInput("test_cage", "140.160.139.123");
 
       System.out.println("cage select");
       cageSelect();
 
       //cageSelect();
 
-      Experiment exp = new Experiment("Bryn", "exp1", "start1", "end1", "on1", "off1");
+      Experiment exp = new Experiment("Bryn", "exp1", "12:00AM 17 03 11", "15", "on1", "off1");
       exp.setCage(new MouseCage(new Cage("cage1", "ip1"), "mouse1"));
       expInput(exp);
 
-      exp = new Experiment("Nolan", "exp2", "start2", "end2", "on2", "off2");
+      exp = new Experiment("Nolan", "exp2", "12:00AM 18 02 25", "15", "on2", "off2");
       exp.setCage(new MouseCage(new Cage("cage2", "ip2"), "mouse2"));
       exp.setCage(new MouseCage(new Cage("cage3", "ip3"), "mouse3"));
       expInput(exp);
@@ -563,7 +564,7 @@ public class CAMPRDatabase{
          System.out.println("Cage: " + ava.get(i).getName() + " IP: " + ava.get(i).getIP());
       }
 
-      statusUpdate("exp1");
+      //statusUpdate("exp1");
       //statusUpdate("exp2");
       System.out.println("find new avaliable");
       ArrayList<Cage> nwava = findAvailable();

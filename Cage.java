@@ -1,4 +1,6 @@
 import java.util.*;
+import java.lang.Runtime;
+import java.io.InputStream;
 
 public class Cage {
    private String cageID;
@@ -41,6 +43,19 @@ public class Cage {
    public void setLightTimes(String on, String off){
       lightOnTime = on;
       lightOffTime = off;
+   }
+   public boolean testIP(){
+      try{
+         String stringRun = "python client.py -ip "+p+" -s hello";
+         Process pr = Runtime.getRuntime().exec(new String[] {"bash", "-c" ,stringRun});
+         InputStream in = pr.getInputStream();
+         Scanner scan = new Scanner(in);
+         if(scan.hasNext()){
+            return true;
+         }
+      }catch(Exception e){
+      }
+      return false;
    }
 
 }
