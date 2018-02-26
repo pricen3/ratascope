@@ -31,7 +31,7 @@ def recv(connection):
 def server(ip):
     """server function"""
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.bind((ip, 3683))#3679
+    s.bind((ip, 3682))#3679
     s.listen(5)
     while True:
         print("at top of while loop ")
@@ -58,6 +58,7 @@ def server(ip):
                 print("recieved: " + str(guess))
                 #guess[0]=startHH guess[1]=startMM guess[2]=yy guess[3]=mm guess[4]=dd guess[5]=mouse guess[6]=duration(hours) guess[7]=lightoff guess[8]=lighton
                 duration = float(guess[6])*(3.6*(10.0**6.0))
+                exp_duration = float(guess[6])*3600.0
                 dt = datetime.datetime
                 now = dt.now()
                 delta = datetime.datetime(year = int(guess[2]), month = int(guess[3]), day = int(guess[4]), hour = int(guess[0]), minute = int(guess[1]), second = 0) - datetime.datetime.now()
@@ -69,10 +70,12 @@ def server(ip):
                 print("after RASPVID")
                 subprocess.call("MP4Box -add /home/pi/Batman/carrolllab/"+guess[2]+guess[3]+guess[4]+guess[5]+".h264 /home/pi/Batman/carrolllab/"+guess[2]+guess[3]+guess[4]+guess[5]+".mp4 &", shell=True)
                 print("after MP4BOX")
-                time.sleep(duration)
+                time.sleep(exp_duration)
+                print("after sleep ///////////////////////////////////////")
                 subprocess.call("sudo pkill -f IRLED2.py &", shell=True)
                 print("killed the thing")
                 GPIO.cleanup()
+                
                 exit()
             else:
                 while True:
