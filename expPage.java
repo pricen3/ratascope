@@ -532,7 +532,8 @@ public class expPage extends Page {
    }
    /* refreash all buttons on page to match the database */
    private void refreash(){
-
+      newButtonY = 80;
+      newButtonX = 28;
       CAMPR.checkForCompletion();
       int expButtonSize = expButtons.size();
       for(int i = 0; i < expButtonSize; i++){

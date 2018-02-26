@@ -72,7 +72,6 @@ public class Experiment{
          }
       }
       String date = start[7]+""+start[8]+""+start[9]+""+start[10]+""+start[11]+""+start[12]+""+start[13]+""+start[14]+""+start[15];
-      System.out.println(hr+" "+min+" "+date+" "+cur.getMouse()+" "+expDurr+" "+onDurr+" "+offDurr);
       return hr+" "+min+date+" "+cur.getMouse()+" "+expDurr+" "+onDurr+" "+offDurr;
    }
 
