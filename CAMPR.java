@@ -7,9 +7,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 /* Command line: java -classpath ".:sqlite-jdbc-3.21.0.jar" CAMPR */
-//TODO: set exps to complete when curent time > start+dur
 //TODO: open completed exp CSV files
 //TODO: check for input decimal durration hours
 
@@ -33,7 +34,7 @@ public class CAMPR {
          inUse = CAMPRDatabase.findUnavailable();
          ongoing = CAMPRDatabase.experimentSelect("ongoing");
          complete = CAMPRDatabase.experimentSelect("completed");
-         checkForCompletion();
+         checkForCompletion(); /* check for completed experiments */
          generateMainPage();
       }catch(Exception ex){
          ex.printStackTrace();

@@ -298,13 +298,7 @@ public class expPage extends Page {
          }
       }));
       add(new Button(188, 30, 40, 310, "Completed Experiments", completeExpPageCreate()));
-
-      ArrayList<Experiment> savedExps = CAMPR.getOngoing();
-      int savedSize = savedExps.size();
-      for(int i = 0; i < savedSize; i++){
-         addExpButton(savedExps.get(i));
-      }
-
+      refreash();
       exists = true;
    }
 
@@ -372,6 +366,7 @@ public class expPage extends Page {
    }
 
    private Page completeExpPageCreate(){
+      refreash();
       Page compPage = new Page("Completed Experiments", 900, 200);
       compPage.addBackground("campr_home.png");
       compPage.descHelper("Select an experiment and click submit to view details.");
@@ -509,13 +504,6 @@ public class expPage extends Page {
    public void addExpButton(Experiment exp){
       if(newButtonY > 850){
          newButtonX += 160;
-         /* The following code resizes the window to fit more experiments,
-         but doing so would reintroduce the bug of dissapearing buttons.
-         Potentially this logic will be
-         if (newButtonX >= getXDim()-160){
-            getFrame().setPreferredSize(new Dimension(newButtonX + 160, 900));
-            reveal();
-         } */
          newButtonY = 80;
       }
 
@@ -542,8 +530,22 @@ public class expPage extends Page {
          }
       }));
    }
+   /* refreash all buttons on page to match the database */
    private void refreash(){
+
+      CAMPR.checkForCompletion();
       int expButtonSize = expButtons.size();
+      for(int i = 0; i < expButtonSize; i++){
+         expButtons.get(i).remove();
+      }
+      expButtons = new ArrayList<Button>();
+      ArrayList<Experiment> savedExps = CAMPR.getOngoing();
+      int savedSize = savedExps.size();
+      for(int i = 0; i < savedSize; i++){
+         addExpButton(savedExps.get(i));
+      }
+
+      /*int expButtonSize = expButtons.size();
       newButtonY = 80;
       newButtonX = 28;
       Button cur;
@@ -555,7 +557,7 @@ public class expPage extends Page {
          cur = expButtons.get(i);
          cur.setBounds(newButtonX, newButtonY);
          newButtonY+=50;
-      }
+      }*/
    }
 
    /* Creates display page for experiment */
@@ -592,7 +594,7 @@ public class expPage extends Page {
       displayPage.descHelper("Experiment Durration: "+exp.getExpDurr()+" hours");
       displayPage.descHelper(onString);
       displayPage.descHelper(offString);
-      displayPage.resetCurPos(); 
+      displayPage.resetCurPos();
 
       return displayPage;
    }

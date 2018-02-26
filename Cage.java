@@ -8,13 +8,12 @@ public class Cage {
    private String lightOffTime;
    private Experiment exp;
    private Mouse inhabitant;
-   private String p; /* ip address of pi */
+   private String ip; /* ip address of pi */
    private boolean expOngoing;
 
    public Cage(String cage, String pi){
-      /*TODO add connection stuff */
       cageID = cage;
-      p = pi;
+      ip = pi;
    }
    public Cage(){}
 
@@ -25,7 +24,7 @@ public class Cage {
       return cageID;
    }
    public String getIP(){
-      return p;
+      return ip;
    }
 
    public void setInhabitant(Mouse mouse){
@@ -46,7 +45,7 @@ public class Cage {
    }
    public boolean testIP(){
       try{
-         String stringRun = "python client.py -ip "+p+" -s hello";
+         String stringRun = "python client.py -ip "+ip+" -s hello";
          Process pr = Runtime.getRuntime().exec(new String[] {"bash", "-c" ,stringRun});
          InputStream in = pr.getInputStream();
          Scanner scan = new Scanner(in);
