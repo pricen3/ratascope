@@ -94,6 +94,9 @@ def server(ip):
                         break
                         #TODO: kill child
                         #TODO: make parent loop back when child completes
+                    elif cancel[0] == "finished":
+                        #TODO: there is probably a better solution to this
+                        break
                 
     s.close()
 
