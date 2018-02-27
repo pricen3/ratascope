@@ -39,7 +39,7 @@ public class Experiment{
    }
 
    public void run(){
-   /* TODO: add stuff to make the experiment run*/
+   /* runs the experiment */
       try{
          MouseCage cur;
          Cage c;
@@ -76,7 +76,24 @@ public class Experiment{
    }
 
    public void finishExperiment(){
-   /*not sure how this is different from cancel*/
+      //TODO: there is probably a better solution
+      //TODO: fix duplicate exp names allowing
+      /* dispatch finished flag to all idle pis */
+      int numCages = cages.size();
+      MouseCage m;
+      Cage c;
+      String ip, finishedString;
+      for(int i = 0; i < numCages; i++){
+         m = cages.get(i);
+         c = m.getCage();
+         ip = c.getIP();
+         finishedString = "python client.py -ip "+ip+" -s finished";
+         try{
+            Process pr = Runtime.getRuntime().exec(new String[] {"bash", "-c" ,finishedString});
+         }catch(Exception ex){
+            ex.printStackTrace();
+         }
+      }
    }
 
    public void setCage(MouseCage c){

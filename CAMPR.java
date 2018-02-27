@@ -131,6 +131,7 @@ public class CAMPR {
       for(int i = 0; i < size; i++){
          cur = ongoing.get(i);
          if(currentDate.after(cur.getEndDate())){
+            cur.finishExperiment();
             toBeMoved.add(cur);
          }
       }

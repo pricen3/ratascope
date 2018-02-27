@@ -222,7 +222,6 @@ public class cagePage extends Page {
       newButtonY+=50;
 
       /* Add Deletion button */
-      // TODO add cancelation logic and background
       displayPage.add(new Button(540, 30, 40, 175, "Delete Cage", new MouseAdapter() {
          public void mouseClicked(MouseEvent e) {
             /* confirm cage is not in use */
