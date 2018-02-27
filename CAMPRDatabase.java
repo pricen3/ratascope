@@ -294,7 +294,6 @@ public class CAMPRDatabase{
          stmt = conn.createStatement();
 
          if (action.toUpperCase().equals("ONGOING")){
-            System.out.println("fidgetspinnersrdope");
             sql = "SELECT * FROM EXPERIMENT INNER JOIN CAGE " +
                      "ON EXPERIMENT.CAGE_NAME = CAGE.CAGE_NAME " +
                      "WHERE STATUS = 'ONGOING' ORDER BY EXP_NAME ASC;";
@@ -313,7 +312,6 @@ public class CAMPRDatabase{
          Experiment curExp;
 
          if(rs.next()){
-            System.out.println("1");
             String expName = rs.getString("EXP_NAME");
             String researcher = rs.getString("RESEARCHER");
             String startTime = rs.getString("START_TIME");
@@ -326,8 +324,6 @@ public class CAMPRDatabase{
             curExp = new Experiment(researcher, expName, startTime, expDur, durOn, durOff);
             curExp.setCage(new MouseCage(new Cage(cage, ip), mouse));
 
-            //rs.next(); //////// ! i think one entry in gets skipped here!
-            System.out.println("2");
             while(rs.next()){
                expName = rs.getString("EXP_NAME");
                researcher = rs.getString("RESEARCHER");

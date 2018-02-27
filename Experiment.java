@@ -1,7 +1,6 @@
 
 /*I am still trying to figure out the time part
    and will have that part done monday. hopefully*/
-   //TODO add content to set experiment as complete
 
 import java.util.*;
 import java.time.*;
@@ -14,7 +13,6 @@ public class Experiment{
    private String researcher;
    private String name;
 
-   //TODO: These need to be changed to some sort of time-class
    private String startTime;
    private String expDurr;
    private String onDurr;
@@ -64,7 +62,9 @@ public class Experiment{
       int min = Integer.parseInt(start[3]+""+start[4]);
       /* Convert to military time */
       if(start[5]=='P'){
-         hr += 12;
+         if(hr!=12){
+            hr += 12;
+         }
       }
       if(start[5]=='A'){
          if(hr==12){
@@ -77,7 +77,6 @@ public class Experiment{
 
    public void finishExperiment(){
       //TODO: there is probably a better solution
-      //TODO: fix duplicate exp names allowing
       /* dispatch finished flag to all idle pis */
       int numCages = cages.size();
       MouseCage m;
@@ -129,7 +128,6 @@ public class Experiment{
    }
    public Date getEndDate(){
       /*process startTime */
-      System.out.println(startTime);
       char[] start = startTime.toCharArray();
       try{
          int hr = Integer.parseInt(start[0]+""+start[1]);
@@ -155,7 +153,6 @@ public class Experiment{
    }
 
    public void cancelExperiment(){
-      //TODO: send cancel script to pis
       int numCages = cages.size();
       MouseCage m;
       Cage c;

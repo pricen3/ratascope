@@ -237,12 +237,13 @@ public class expPage extends Page {
             p.errorMessHelper("Experiment name required.", 600);
             return false;
          }else{
-            ArrayList<Experiment> allCurrent = CAMPR.getOngoing();
-            int curSize = allCurrent.size();
+            /* check for duplicate names */
+            ArrayList<Experiment> all = CAMPR.getAllExps();
+            int curSize = all.size();
             Experiment compare;
             String compName;
             for(int i = 0; i < curSize; i++){
-               compare = allCurrent.get(i);
+               compare = all.get(i);
                compName = compare.getName();
                if(resName.equals(compName)){
                   p.errorMessHelper("Experiment name invalid due to pre-existing experiment with same name.", 600);

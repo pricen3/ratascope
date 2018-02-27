@@ -23,9 +23,6 @@ public class CAMPR {
    private static ArrayList<Cage> inUse = new ArrayList<Cage>();
 
    public static void main(String[] args) throws Exception{
-      DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-      Date date = new Date(116, 14, 30, 1, 1);
-      System.out.println(dateFormat.format(date));
       try{
          /* populate ArrayLists */
          available.clear();
@@ -66,6 +63,9 @@ public class CAMPR {
    public static ArrayList<Experiment> getComplete(){
       return complete;
    }
+   public static ArrayList<Experiment> getAllExps(){
+      return CAMPRDatabase.experimentSelect("all");
+   }
    public static ArrayList<Cage> getAvail(){
       return available;
    }
@@ -80,7 +80,6 @@ public class CAMPR {
       ongoing.add(e);
    }
    public static void completeExp(Experiment e){
-      System.out.println("updating "+e.getName()+" to completed.");
       CAMPRDatabase.statusUpdate(e.getName());
       complete.add(e);
       ongoing.remove(e);
