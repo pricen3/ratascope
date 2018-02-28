@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Date;
+import java.lang.Runtime;
 
 public class expPage extends Page {
 
@@ -420,9 +421,16 @@ public class expPage extends Page {
                return;
             }
             Page displayPage = expDisplayPage(ex);
-            displayPage.add(new Button(540, 130, 40, 200, "Retrieve Results", new MouseAdapter() {
+            displayPage.add(new Button(540, 30, 40, 200, "Retrieve Results", new MouseAdapter() {
                public void mouseClicked(MouseEvent e) {
                   //TODO: add retrieval Logic
+                  String pathToCSV = "/home/rat/git/ratascope/test.csv";
+                  String stringRun = "excel "+pathToCSV;
+                  try{
+                     Process pr = Runtime.getRuntime().exec(new String[] {"bash", "-c" ,stringRun});
+                  }catch (Exception ex){
+                     /* Should not be here */
+                  }
                }
             }));
             displayPage.reveal();
