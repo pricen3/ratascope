@@ -31,7 +31,7 @@ def recv(connection):
 def server(ip):
     """server function"""
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.bind((ip, 3682))#3679
+    s.bind((ip, 3683))#3679
     s.listen(5)
     while True:
         print("at top of while loop ")
@@ -61,8 +61,9 @@ def server(ip):
                 exp_duration = float(guess[6])*3600.0
                 dt = datetime.datetime
                 now = dt.now()
-                delta = datetime.datetime(year = int(guess[2]), month = int(guess[3]), day = int(guess[4]), hour = int(guess[0]), minute = int(guess[1]), second = 0) - datetime.datetime.now()
-                starttime = delta.seconds
+                delta = datetime.datetime(year = 2000+int(guess[2]), month = int(guess[3]), day = int(guess[4]), hour = int(guess[0]), minute = int(guess[1]), second = 0) - datetime.datetime.now()
+                starttime = delta.total_seconds()
+                print(starttime)
                 time.sleep(starttime)
                 subprocess.call("sudo python IRLED2.py -on "+guess[8]+" -off "+guess[7]+" -dur "+guess[6]+"&", shell=True)
                 print("after IRLED")
