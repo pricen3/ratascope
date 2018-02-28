@@ -7,6 +7,7 @@ import java.time.*;
 import java.lang.Runtime;
 import java.lang.Integer;
 import java.util.Date;
+import java.io.InputStream;
 
 public class Experiment{
    private ArrayList<MouseCage> cages;
@@ -36,7 +37,7 @@ public class Experiment{
       offDurr = offD;
    }
 
-   public void run(){
+   public boolean run(){
    /* runs the experiment */
       try{
          MouseCage cur;
@@ -49,10 +50,17 @@ public class Experiment{
             runString = getRunString(cur);
             stringRun = "python client.py -ip "+ip+" -s \""+runString+"\"";
             Process pr = Runtime.getRuntime().exec(new String[] {"bash", "-c" ,stringRun});
+            /* check that experiment was recieved */
+            InputStream in = pr.getInputStream();
+            Scanner scan = new Scanner(in);
+            if(!scan.hasNext()){
+               return false;
+            }
          }
       }catch(Exception ex){
          ex.printStackTrace();
       }
+      return true;
    }
 
    private String getRunString(MouseCage cur){
@@ -83,6 +91,7 @@ public class Experiment{
       Cage c;
       String ip, finishedString;
       for(int i = 0; i < numCages; i++){
+         /* dispatch finished message to all cages so that they start new cycle */
          m = cages.get(i);
          c = m.getCage();
          ip = c.getIP();
@@ -92,6 +101,8 @@ public class Experiment{
          }catch(Exception ex){
             ex.printStackTrace();
          }
+         /* free cage */
+         CAMPR.freeCage(m.getCage());
       }
    }
 
@@ -134,7 +145,9 @@ public class Experiment{
          int min = Integer.parseInt(start[3]+""+start[4]);
          /* Convert to military time */
          if(start[5]=='P'){
-            hr += 12;
+            if(hr != 12){
+               hr += 12;
+            }
          }
          if(start[5]=='A'){
             if(hr==12){

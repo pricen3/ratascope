@@ -43,7 +43,15 @@ public class CAMPR {
       Page mainPage = new Page("CAMPR", 900, 200);
       mainPage.addBackground("campr_home.png");
       /* add buttons */
-      mainPage.add(new Button(28, 30, 40, 150, "Experiments", generateExpPage()));
+      mainPage.add(new Button(28, 30, 40, 150, "Experiments", new MouseAdapter() {
+         public void mouseClicked(MouseEvent e) {
+            try{
+               generateExpPage().reveal();
+            }catch(Exception ex){
+               /* should not be here */
+            }
+         }
+      }));
       mainPage.add(new Button(28, 80, 40, 150, "Cages", generateCagePage()));
       mainPage.add(new Button(28, 130, 40, 150, "Help"));
       mainPage.reveal();

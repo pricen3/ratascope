@@ -503,7 +503,7 @@ public class CAMPRDatabase{
       createTable("EXPERIMENT");
       System.out.println("created table hopefully!");
 
-      cageInput("cage1", "ip1");
+      cageInput("cage1", "140.160.139.129");
       cageInput("cage2", "ip2");
       cageInput("cage3", "ip3");
       cageInput("test_cage", "140.160.139.123");

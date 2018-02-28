@@ -114,11 +114,17 @@ public class expPage extends Page {
          ex.addOnDurr((String)s);
          s = (String)offTimeInput.getSelectedItem();
          ex.addOffDurr((String)s);
-         CAMPR.addExp(ex);
-         expP.addExpButton(ex);
-         p.close();
-         expP.resetCurPos();////////////////////////
-         ex.run();
+         if(ex.run()){
+            /* confirm dispatch to pis */
+            CAMPR.addExp(ex);
+            expP.addExpButton(ex);
+            p.close();
+            expP.resetCurPos();////////////////////////
+         }else{
+            /* experiment invalidated */
+            p.errorMessHelper("Could not connect to one or more specified cages", 600);
+            ex.cancelExperiment();
+         }
       }
 
       /* check for user input errors */
@@ -306,8 +312,9 @@ public class expPage extends Page {
    /* METHODS */
    public static expPage getExpPage(){
       if (exists){
-         /* do nothing */
+         thePage.refreash();
       }else{
+         System.out.println("should only print this once.");
          thePage = new expPage();
          thePage.addBackground("campr_exp_home.png");
       }
@@ -367,7 +374,6 @@ public class expPage extends Page {
    }
 
    private Page completeExpPageCreate(){
-      refreash();
       Page compPage = new Page("Completed Experiments", 900, 200);
       compPage.addBackground("campr_home.png");
       compPage.descHelper("Select an experiment and click submit to view details.");
@@ -536,6 +542,7 @@ public class expPage extends Page {
       newButtonY = 80;
       newButtonX = 28;
       CAMPR.checkForCompletion();
+      System.out.println("HERE MY D00D!");
       int expButtonSize = expButtons.size();
       for(int i = 0; i < expButtonSize; i++){
          expButtons.get(i).remove();
