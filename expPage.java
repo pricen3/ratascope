@@ -9,6 +9,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Date;
 
 public class expPage extends Page {
 
@@ -192,11 +193,6 @@ public class expPage extends Page {
             }
             /* Year */
             yInt = Integer.parseInt(datArray[6]+""+datArray[7]+""+datArray[8]+""+datArray[9]);
-            if(yInt < 2018){
-               /* Need a time machine */
-               p.errorMessHelper("Invalid year input. Time machine required to access specified year.", 600);
-               return false;
-            }
             if(mInt == 2){
                if(yInt % 4 != 0){
                   /* Leap Year */
@@ -211,6 +207,26 @@ public class expPage extends Page {
 
             if(dInt>(31-subDays) || dInt<=0){
                p.errorMessHelper("Invalid day input", 600);
+               return false;
+            }
+            char[] start = ((String)startTime.getSelectedItem() + (String)startAOrP.getSelectedItem()).toCharArray();
+            int hr = Integer.parseInt(start[0]+""+start[1]);
+            int min = Integer.parseInt(start[3]+""+start[4]);
+            /* Convert to military time */
+            if(start[5]=='P'){
+               if(hr != 12){
+                  hr += 12;
+               }
+            }
+            if(start[5]=='A'){
+               if(hr==12){
+                  hr=0;
+               }
+            }
+            /* check that start time is in the future */
+            Date currentDate = new Date();
+            if(currentDate.after(new Date(yInt-1900, mInt-1, dInt, hr, min))){
+               p.errorMessHelper("Invalid date input: time machine required", 600);
                return false;
             }
          }catch (Exception ex){
