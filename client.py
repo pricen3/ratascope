@@ -29,6 +29,13 @@ def parse_command_line_args():
         type=str,
         required=True
     )
+    parser.add_argument(
+        '-name',
+        help='NAME of experiment',
+        metavar='name',
+        type=str,
+        required=False
+    )
     return parser.parse_args()
 
 def send(connection, message):
@@ -65,6 +72,10 @@ def client(ip, send_string):
 def main():
     args = parse_command_line_args()
     client(args.ip, args.s)
+    if(args.name):
+        # create file
+        # write path to file
+        # move file into queue directory
 
 if __name__ == '__main__':
     main()
