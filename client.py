@@ -73,9 +73,15 @@ def main():
     args = parse_command_line_args()
     client(args.ip, args.s)
     if(args.name):
-        # create file
-        # write path to file
-        # move file into queue directory
+        ###add the proper paths when decided
+        path = "queue"
+        videoPath = "video path"
+        fileName = args.name + ".txt"
+        file = open(fileName)
+        file.write(videoPath + args.name + "video ending")
+        file.close()
+
+        os.rename(fileName, path + "/" + fileName)
 
 if __name__ == '__main__':
     main()
