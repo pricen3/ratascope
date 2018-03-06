@@ -146,12 +146,10 @@ public class JavaCVPrjt01 {
         			if ((r.tl().x > (toplx-30)) && (r.tl().x < (toplx+30))) {
         				toplx = (int) r.tl().x;
         				// write to CSV here?
-        				ptoplx = toplx;
         			}
         			if ((r.tl().y > (toply-30)) && (r.tl().y < (toply+30))) {
         				toply = (int) r.tl().y;
         				// write to CSV here?
-        				ptoply = toply;
         			}
         		}
         	}
@@ -180,6 +178,8 @@ public class JavaCVPrjt01 {
         		// Time, DistanceUPorDOWN, DistanceLEFTorRIGHT, Next_to_Wall
         		bw.write(totalTime + "," + movedUD + "," + movedLR + "," + againstWall);
 				bw.newLine();
+				ptoplx = toplx;
+				ptoply = toply;
         	}
             ImageIcon image = new ImageIcon(Mat2bufferedImage(frame));
             vidpanel.setIcon(image);
