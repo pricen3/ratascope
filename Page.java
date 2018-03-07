@@ -34,7 +34,7 @@ public class Page {
       back = new Background();
       title = t;
       x = xDimension;
-      y = yDimension;
+      y = yDimension+30;
       revealed = false;
       frame = new JFrame();
       frame.setTitle(title);
@@ -51,7 +51,7 @@ public class Page {
       back = new Background();
       title = t;
       x = xDimension;
-      y = yDimension;
+      y = yDimension+30;
       revealed = false;
       frame = new JFrame();
       frame.setTitle(title);
