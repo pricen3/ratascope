@@ -29,77 +29,72 @@ def recv(connection):
         print('timeoutError ocurred')
 
 def server(ip):
-    """server function"""
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.bind((ip, 3683))#3679
-    s.listen(5)
-    while True:
-        print("at top of while loop ")
-        c, addr = s.accept()
-        guess = str(recv(c))
-	guess = guess.split(" ")
-	if len(guess)==1: #and guess[0] == "hello"
-	    #we're trying to establish a connection
-            print("establishing connection")
-	    """else:
-		#client closed on us
-		print("client closed")
-		#c.close() ?? or s.close()?"""
-	    send(c, 'Y')
-            c.close()
-        else:
-            pid = os.fork()
-            if pid==0:
-                #child runs CAMPR
-                #TODO: date doesn't seem to be working...
-                send(c, 'Y')
-                c.close()
-                print("startHH startMM YY MM DD mouse_name duration(hours) lightoff(hours) lighton(hours)")
-                print("recieved: " + str(guess))
-                #guess[0]=startHH guess[1]=startMM guess[2]=yy guess[3]=mm guess[4]=dd guess[5]=mouse guess[6]=duration(hours) guess[7]=lightoff guess[8]=lighton
-                duration = float(guess[6])*(3.6*(10.0**6.0))
-                exp_duration = float(guess[6])*3600.0
-                dt = datetime.datetime
-                now = dt.now()
-                delta = datetime.datetime(year = 2000+int(guess[2]), month = int(guess[3]), day = int(guess[4]), hour = int(guess[0]), minute = int(guess[1]), second = 0) - datetime.datetime.now()
-                starttime = delta.total_seconds()
-                print(starttime)
-                time.sleep(starttime)
-                subprocess.call("sudo python IRLED2.py -on "+guess[8]+" -off "+guess[7]+" -dur "+guess[6]+"&", shell=True)
-                print("after IRLED")
-                subprocess.call("raspivid -t " + str(duration) + " -w 450 -h 300 -fps 25 -b 2000000 -cfx 128:128 -o /home/pi/Batman/carrolllab/"+guess[2]+guess[3]+guess[4]+guess[5]+".h264 &", shell=True)
-                print("after RASPVID")
-                subprocess.call("MP4Box -add /home/pi/Batman/carrolllab/"+guess[2]+guess[3]+guess[4]+guess[5]+".h264 /home/pi/Batman/carrolllab/"+guess[2]+guess[3]+guess[4]+guess[5]+".mp4 &", shell=True)
-                print("after MP4BOX")
-                time.sleep(exp_duration)
-                print("after sleep ///////////////////////////////////////")
-                subprocess.call("sudo pkill -f IRLED2.py &", shell=True)
-                print("killed the thing")
-                GPIO.cleanup()
+	"""server function"""
+	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	s.bind((ip, 3683))#3679
+	s.listen(5)
+	while True:
+		print("at top of while loop ")
+		c, addr = s.accept()
+		guess = str(recv(c))
+		guess = guess.split(" ")
+		if len(guess)==1: #and guess[0] == "hello"
+			#we're trying to establish a connection
+			print("establishing connection")
+			send(c, 'Y')
+			c.close()
+		else:
+			pid = os.fork()
+			if pid==0:
+				#child runs CAMPR
+				#TODO: date doesn't seem to be working...
+				send(c, 'Y')
+				c.close()
+				print("startHH startMM YY MM DD mouse_name duration(hours) lightoff(hours) lighton(hours)")
+				print("recieved: " + str(guess))
+				#guess[0]=startHH guess[1]=startMM guess[2]=yy guess[3]=mm guess[4]=dd guess[5]=mouse guess[6]=duration(hours) guess[7]=lightoff guess[8]=lighton
+				duration = float(guess[6])*(3.6*(10.0**6.0))
+				exp_duration = float(guess[6])*3600.0
+				dt = datetime.datetime
+				now = dt.now()
+				delta = datetime.datetime(year = 2000+int(guess[2]), month = int(guess[3]), day = int(guess[4]), hour = int(guess[0]), minute = int(guess[1]), second = 0) - datetime.datetime.now()
+				starttime = delta.total_seconds()
+				print(starttime)
+				time.sleep(starttime)
+				subprocess.call("sudo python IRLED2.py -on "+guess[8]+" -off "+guess[7]+" -dur "+guess[6]+"&", shell=True)
+				print("after IRLED")
+				subprocess.call("raspivid -t " + str(duration) + " -w 450 -h 300 -fps 25 -b 2000000 -cfx 128:128 -o /home/pi/Batman/carrolllab/"+guess[2]+guess[3]+guess[4]+guess[5]+".h264 &", shell=True)
+				print("after RASPVID")
+				subprocess.call("MP4Box -add /home/pi/Batman/carrolllab/"+guess[2]+guess[3]+guess[4]+guess[5]+".h264 /home/pi/Batman/carrolllab/"+guess[2]+guess[3]+guess[4]+guess[5]+".mp4 &", shell=True)
+				print("after MP4BOX")
+				time.sleep(exp_duration)
+				print("after sleep ///////////////////////////////////////")
+				subprocess.call("sudo pkill -f IRLED2.py &", shell=True)
+				print("killed the thing")
+				GPIO.cleanup()
+				exit()
+			else:
+				while True:
+					print(pid)
+					c_1, addr_1 = s.accept()
+					cancel = str(recv(c_1))
+					cancel = cancel.split(" ")
+					send(c_1, 'Y')
+					c_1.close()
+					if cancel[0] == "cancel":
+						#kill running experiment processes
+						print("killing experiment processes")
+						subprocess.call("sudo pkill -f IRLED2.py &", shell=True)
+						subprocess.call("sudo pkill -f raspivid &", shell=True)
+						subprocess.call("sudo kill {}".format(pid), shell=True)
+						break
+						#TODO: kill child
+						#TODO: make parent loop back when child completes
+					elif cancel[0] == "finished":
+						#TODO: there is probably a better solution to this
+						break
                 
-                exit()
-            else:
-                while True:
-                    print(pid)
-                    c_1, addr_1 = s.accept()
-                    cancel = str(recv(c_1))
-                    cancel = cancel.split(" ")
-                    send(c_1, 'Y')
-                    c_1.close()
-                    if cancel[0] == "cancel":
-                        #kill running experiment processes
-                        print("killing experiment processes")
-                        subprocess.call("sudo pkill -f IRLED2.py &", shell=True)
-                        subprocess.call("sudo pkill -f raspivid &", shell=True)
-                        subprocess.call("sudo kill {}".format(pid), shell=True)
-                        break
-                        #TODO: kill child
-                        #TODO: make parent loop back when child completes
-                    elif cancel[0] == "finished":
-                        #TODO: there is probably a better solution to this
-                        break
-                
-    s.close()
+	s.close()
 
 
 def main():
