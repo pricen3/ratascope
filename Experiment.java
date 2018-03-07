@@ -48,8 +48,8 @@ public class Experiment{
             c = cur.getCage();
             ip = c.getIP();
             runString = getRunString(cur);
-            stringRun = "python client.py -ip "+ip+" -s \""+runString+"\"";
-            Process pr = Runtime.getRuntime().exec(new String[] {"bash", "-c" ,stringRun});
+            stringRun = "C:\\Users\\nolan\\AppData\\Local\\Programs\\Python\\Python35-32\\python.exe C:\\Users\\nolan\\Documents\\49X\\Ratascope\\ratascope-master\\client.py -ip "+ip+" -s \""+runString+"\"";
+            Process pr = Runtime.getRuntime().exec(stringRun);
             /* check that experiment was recieved */
             InputStream in = pr.getInputStream();
             Scanner scan = new Scanner(in);
@@ -95,9 +95,9 @@ public class Experiment{
          m = cages.get(i);
          c = m.getCage();
          ip = c.getIP();
-         finishedString = "python client.py -ip "+ip+" -s finished";
+         finishedString = "C:\\Users\\nolan\\AppData\\Local\\Programs\\Python\\Python35-32\\python.exe C:\\Users\\nolan\\Documents\\49X\\Ratascope\\ratascope-master\\client.py -ip "+ip+" -s finished";
          try{
-            Process pr = Runtime.getRuntime().exec(new String[] {"bash", "-c" ,finishedString});
+            Process pr = Runtime.getRuntime().exec(finishedString);
          }catch(Exception ex){
             ex.printStackTrace();
          }
@@ -174,9 +174,9 @@ public class Experiment{
          m = cages.get(i);
          c = m.getCage();
          ip = c.getIP();
-         cancelString = "python client.py -ip "+ip+" -s cancel";
+         cancelString = "C:\\Users\\nolan\\AppData\\Local\\Programs\\Python\\Python35-32\\python.exe C:\\Users\\nolan\\Documents\\49X\\Ratascope\\ratascope-master\\client.py -ip "+ip+" -s cancel";
          try{
-            Process pr = Runtime.getRuntime().exec(new String[] {"bash", "-c" ,cancelString});
+            Process pr = Runtime.getRuntime().exec(cancelString);
          }catch(Exception ex){
             ex.printStackTrace();
          }

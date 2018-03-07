@@ -45,8 +45,8 @@ public class Cage {
    }
    public boolean testIP(){
       try{
-         String stringRun = "python client.py -ip "+ip+" -s hello";
-         Process pr = Runtime.getRuntime().exec(new String[] {"bash", "-c" ,stringRun});
+         String stringRun = "C:\\Users\\nolan\\AppData\\Local\\Programs\\Python\\Python35-32\\python.exe C:\\Users\\nolan\\Documents\\49X\\Ratascope\\ratascope-master\\client.py -ip "+ip+" -s hello";
+         Process pr = Runtime.getRuntime().exec(stringRun); //new String[] {"bash", "-c" ,stringRun};
          InputStream in = pr.getInputStream();
          Scanner scan = new Scanner(in);
          if(scan.hasNext()){
