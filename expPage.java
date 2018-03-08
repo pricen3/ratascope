@@ -425,7 +425,7 @@ public class expPage extends Page {
                public void mouseClicked(MouseEvent e) {
                   //TODO: add retrieval Logic
                   String pathToCSV = "/home/rat/git/ratascope/test.csv";
-                  String stringRun = "excel "+pathToCSV;
+                  String stringRun = "start excel "+pathToCSV;
                   try{
                      Process pr = Runtime.getRuntime().exec(new String[] {"bash", "-c" ,stringRun});
                   }catch (Exception ex){
