@@ -1,6 +1,11 @@
 import java.util.*;
 import java.lang.Runtime;
 import java.io.InputStream;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 
 public class Cage {
    private String cageID;
@@ -45,7 +50,14 @@ public class Cage {
    }
    public boolean testIP(){
       try{
-         String stringRun = "C:\\Users\\nolan\\AppData\\Local\\Programs\\Python\\Python35-32\\python.exe C:\\Users\\nolan\\Documents\\49X\\Ratascope\\ratascope-master\\client.py -ip "+ip+" -s hello";
+	    String configs = new File("").getAbsolutePath();
+	    	File configf = new File(configs + "\\config.txt");
+	    	FileReader fread = new FileReader(configf);
+	     BufferedReader read = new BufferedReader(fread);
+		String path = read.readLine();
+		read.close();
+         String stringRun = "py "+path+"client.py -ip "+ip+" -s hello";
+		 System.out.println(stringRun);
          Process pr = Runtime.getRuntime().exec(stringRun); //new String[] {"bash", "-c" ,stringRun};
          InputStream in = pr.getInputStream();
          Scanner scan = new Scanner(in);

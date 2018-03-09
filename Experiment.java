@@ -8,6 +8,11 @@ import java.lang.Runtime;
 import java.lang.Integer;
 import java.util.Date;
 import java.io.InputStream;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 
 public class Experiment{
    private ArrayList<MouseCage> cages;
@@ -43,12 +48,20 @@ public class Experiment{
          MouseCage cur;
          Cage c;
          String ip, runString, stringRun;
+		 String configs = new File("").getAbsolutePath();
+	    	File configf = new File(configs + "\\config.txt");
+	    	FileReader fread = new FileReader(configf);
+	     BufferedReader read = new BufferedReader(fread);
+	     
+		String path = read.readLine();
+		read.close();
          for(int i = 0; i < cages.size(); i++){
             cur = cages.get(i);
             c = cur.getCage();
             ip = c.getIP();
             runString = getRunString(cur);
-            stringRun = "C:\\Users\\nolan\\AppData\\Local\\Programs\\Python\\Python35-32\\python.exe C:\\Users\\nolan\\Documents\\49X\\Ratascope\\ratascope-master\\client.py -ip "+ip+" -s \""+runString+"\"";
+   	 	
+            stringRun = "py "+path+"client.py -ip "+ip+" -s \""+runString+"\"";
             Process pr = Runtime.getRuntime().exec(stringRun);
             /* check that experiment was recieved */
             InputStream in = pr.getInputStream();
@@ -95,8 +108,17 @@ public class Experiment{
          m = cages.get(i);
          c = m.getCage();
          ip = c.getIP();
-         finishedString = "C:\\Users\\nolan\\AppData\\Local\\Programs\\Python\\Python35-32\\python.exe C:\\Users\\nolan\\Documents\\49X\\Ratascope\\ratascope-master\\client.py -ip "+ip+" -s finished";
-         try{
+		 try {
+	    		String configs = new File("").getAbsolutePath();
+	    		File configf = new File(configs + "\\config.txt");
+	    		FileReader fread = new FileReader(configf);
+	        	BufferedReader read = new BufferedReader(fread);
+	        
+			String path = read.readLine();
+	        	read.close();
+   	 	
+            finishedString = "py "+path+"client.py -ip "+ip+" -s finished";
+      
             Process pr = Runtime.getRuntime().exec(finishedString);
          }catch(Exception ex){
             ex.printStackTrace();
@@ -170,12 +192,20 @@ public class Experiment{
       MouseCage m;
       Cage c;
       String ip, cancelString;
+	  
       for(int i = 0; i < numCages; i++){
          m = cages.get(i);
          c = m.getCage();
          ip = c.getIP();
-         cancelString = "C:\\Users\\nolan\\AppData\\Local\\Programs\\Python\\Python35-32\\python.exe C:\\Users\\nolan\\Documents\\49X\\Ratascope\\ratascope-master\\client.py -ip "+ip+" -s cancel";
          try{
+		 	String configs = new File("").getAbsolutePath();
+	    	File configf = new File(configs + "\\config.txt");
+	    	FileReader fread = new FileReader(configf);
+	     BufferedReader read = new BufferedReader(fread);
+	    
+		String path = read.readLine();
+		read.close();
+         cancelString = "py "+path+"client.py -ip "+ip+" -s cancel";
             Process pr = Runtime.getRuntime().exec(cancelString);
          }catch(Exception ex){
             ex.printStackTrace();
