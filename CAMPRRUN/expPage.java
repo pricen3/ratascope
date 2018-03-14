@@ -12,6 +12,12 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Date;
 import java.lang.Runtime;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.InputStream;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 
 public class expPage extends Page {
 
@@ -424,11 +430,21 @@ public class expPage extends Page {
             Page displayPage = expDisplayPage(ex);
             displayPage.add(new Button(540, 30, 40, 200, "Retrieve Results", new MouseAdapter() {
                public void mouseClicked(MouseEvent e) {
-                  //TODO: add retrieval Logic
-                  String pathToCSV = "/home/rat/git/ratascope/test.csv";
-                  String stringRun = "start excel "+pathToCSV;
                   try{
-                     Process pr = Runtime.getRuntime().exec(new String[] {"bash", "-c" ,stringRun});
+                     String configs = new File("").getAbsolutePath();
+	    		         File configf = new File(configs + "/config.txt");
+	    		         FileReader fread = new FileReader(configf);
+	        	         BufferedReader read = new BufferedReader(fread);
+	                  read.readLine();
+			            String pathToCSV = read.readLine();
+	        	         read.close();
+                     ArrayList<String> allCages = ex.getFinishedFileNames();
+                     int numCages = allCages.size();
+                     String stringRun;
+                     for(int i = 0; i < numCages; i++){
+                        stringRun = "notepad "+pathToCSV+allCages.get(i);
+                        Process pr = Runtime.getRuntime().exec(stringRun);
+                     }
                   }catch (Exception ex){
                      /* Should not be here */
                   }
