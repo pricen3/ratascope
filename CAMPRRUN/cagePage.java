@@ -81,7 +81,7 @@ public class cagePage extends Page {
       }
       /* Check that IP address is valid */
       private boolean isValidIP(String inputIP){
-         char[] ip = inputIP.toCharArray();
+         /*char[] ip = inputIP.toCharArray();
          if(ip.length!=15){
             p.errorMessHelper("Invalid IP, must be in form xxx.xxx.xxx.xxx");
             return false;
@@ -102,7 +102,7 @@ public class cagePage extends Page {
          }catch (Exception ex){
             p.errorMessHelper("Invalid IP, must be in form xxx.xxx.xxx.xxx");
             return false;
-         }
+         }*/
          return true;
       }
       private int max(int x, int y){
