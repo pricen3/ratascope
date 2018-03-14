@@ -213,6 +213,21 @@ public class Experiment{
       }
       CAMPR.cancelExp(this);
    }
+   
+   public ArrayList<String> getFinishedFileNames(){
+      //date_mouse (eg. 20171024_BBR01)
+      ArrayList<String> ret = new ArrayList<String>();
+      ArrayList<MouseCage> allCages = this.getCages();
+      int numCages = allCages.size();
+      char[] start = startTime.toCharArray();
+      String date = "20"+start[8]+""+start[9]+""+start[11]+""+start[12]+""+start[14]+""+start[15]+"_";
+      String retString;
+      for(int i = 0; i < numCages; i++){
+         retString=date+allCages.get(i).getMouse();
+         ret.add(retString);
+      }
+      return ret;
+   }
 
    public void addOnDurr(String t){
       onDurr=t;
