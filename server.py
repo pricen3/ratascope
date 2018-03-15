@@ -67,7 +67,7 @@ def server(ip):
 				print("after RASPVID")
 				subprocess.call("MP4Box -add /home/pi/Batman/carrolllab/"+guess[2]+guess[3]+guess[4]+guess[5]+".h264 /home/pi/Batman/carrolllab/"+guess[2]+guess[3]+guess[4]+guess[5]+".mp4 &", shell=True)
 				print("after MP4BOX")
-				time.sleep(exp_duration)
+				time.sleep(exp_duration+5)
 				print("after sleep ///////////////////////////////////////")
 				subprocess.call("sudo pkill -f IRLED2.py &", shell=True)
 				print("killed the thing")
